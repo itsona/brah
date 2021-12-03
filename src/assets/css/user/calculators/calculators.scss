@@ -1,0 +1,99 @@
+.calculators_input{
+  height: 50px;
+}
+.calculators-width{
+  width: 90% !important;
+}
+.calculators .v-expansion-panel::before {
+  box-shadow: none !important;
+}
+.calculators .v-expansion-panel--active::before {
+  box-shadow: 0px 0px 0px 1px #cccccc !important;
+}
+.calculators .v-expansion-panel-header::before {
+  background-color: rgb(0, 0, 0) !important;
+  opacity: 0.05 !important;
+  border-radius: 18px !important;
+}
+.calculators .v-expansion-panel-header--active::before {
+  background-color: rgb(255, 255, 255) !important;
+  opacity: 1 !important;
+  border-bottom-color: rgb(0, 0, 0);
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-radius: 0px !important;
+}
+.calculators .v-expansion-panel {
+  margin-bottom: 15px;
+}
+.calculators .v-expansion-panel-header {
+  min-height: 60px;
+}
+.calculators .v-expansion-panel:not(:first-child)::after {
+  border-top: none !important;
+}
+.calculator .v-text-field__details {
+  display: none;
+}
+.calculator span,
+.calculator .v-text-field input,
+.calculator .v-list-item__title,
+.calculator .v-select__selection,
+.calculator .v-input__control .v-label {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+.calculators .text-capitalize .v-btn__content {
+  color: #293961 !important;
+}
+.calculators .v-input--is-disabled .v-input__slot fieldset {
+  border-color: rgb(240, 240, 240) !important;
+}
+.calculators .v-input__slot fieldset {
+  border-radius: 28px !important;
+}
+
+//Vuetify Money Input Number
+.vuetify-money-input .v-input__slot{
+  padding-left: 25px !important;
+}
+
+@media (max-width: 1025px) {
+
+  .calculators-title {
+    font-size: 1.7rem !important;
+  }
+}
+@media (max-width: 770px) {
+  .calculators-invoice-btn {
+    margin: 2% 0 5% 3% !important;;
+  }
+  .calculators-title {
+    font-size: 1.1rem !important;
+  }
+}
+@media (max-width: 600px) {
+  .calculators-title {
+    margin-left: 5%;
+  }
+  .calculator-invoice-img,
+  .calculators-header-img {
+    display: none;
+  }
+  .calculators-invoice-btn {
+    margin: 2% 0 5% 3% !important;;
+  }
+  .calculators-header-one {
+    order: 1;
+  }
+  .calculators-header-one {
+    order: 2;
+  }
+}
+
+@media (max-width: 340px) {
+  .calculators-header-img {
+    width: 7rem !important;
+    height: 6rem !important;
+  }
+}

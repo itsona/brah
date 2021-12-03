@@ -1,0 +1,221 @@
+{
+  "banks": [
+
+    {
+      "name_en": "Bank of Georgia",
+      "name_ka": "საქართველოს ბანკი",
+      "country_code": "GE",
+      "swift":  "BAGAGE22",
+      "iban_code": "BG",
+      "standard": "iban",
+      "countries": ["Georgia", "Pakistan"]
+    },
+    {
+      "name_en": "TBC Bank",
+      "name_ka": "თიბისი ბანკი",
+      "country_code": "GE",
+      "swift":  "TBCBGE22",
+      "iban_code": "TB",
+      "standard": "iban",
+      "countries": ["Georgia", "Pakistan"]
+    },
+    {
+      "name_en": "Cartu Bank",
+      "name_ka": "ბანკი ქართუ",
+      "country_code": "GE",
+      "swift":  "CRTUGE22",
+      "iban_code": "CR",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Silk Road Bank",
+      "name_ka": "სილქ როუდ ბანკი",
+      "country_code": "GE",
+      "swift":  "DISNGE22",
+      "iban_code": "BT",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "VTB Bank Georgia",
+      "name_ka": "ვითიბი ბანკი ჯორჯია",
+      "country_code": "GE",
+      "swift":  "UGEBGE22",
+      "iban_code": "VT",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Ziraat Bank Georgia",
+      "name_ka": "ზირაათ ბანკი საქართველო" ,
+      "country_code": "GE",
+      "swift":  "TCZBGE22",
+      "iban_code": "ZB",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Terabank",
+      "name_ka": "ტერაბანკი",
+      "country_code": "GE",
+      "swift":  "TEBAGE22",
+      "iban_code": "KS",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Procredit Bank",
+      "name_ka": "პროკრედიტ ბანკი",
+      "country_code": "GE",
+      "swift":  "MIBGGE22",
+      "iban_code": "PC",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Liberty Bank",
+      "name_ka": "ლიბერთი ბანკი",
+      "country_code": "GE",
+      "swift":  "LBRTGE22",
+      "iban_code": "LB",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Halyk Bank Georgia",
+      "name_ka": "ხალიკ ბანკი საქართველო",
+      "country_code": "GE",
+      "swift":  "HABGGE22",
+      "iban_code": "HB",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "ISBANK Georgia",
+      "name_ka": "იშბანკი საქართველო" ,
+      "country_code": "GE",
+      "swift":  "ISBKGE22",
+      "iban_code": "IS",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "PASHA Bank Georgia",
+      "name_ka": "პაშა ბანკი საქართველო",
+      "country_code": "GE",
+      "swift":  "PAHAGE22",
+      "iban_code": "PB",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Finca Bank Georgia",
+      "name_ka": "ფინკა ბანკი საქართველო",
+      "country_code": "GE",
+      "swift":  "FGEOGE22",
+      "iban_code": "FG",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Credo Bank",
+      "name_ka": "კრედო ბანკი",
+      "country_code": "GE",
+      "swift":  "JSCRGE22",
+      "iban_code": "CD",
+      "standard": "iban",
+      "countries": ["Georgia"]
+    },
+    {
+      "name_en": "Metropolitan Bank & Trust Co.",
+      "name_ka": "MetroBank",
+      "country_code": "PH",
+      "swift":  "MBTCPHMM",
+      "minLength": 10,
+      "maxLength": 13,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Banco De Oro (BDO) Unibank",
+      "name_ka": "Banco De Oro (BDO) Unibank",
+      "country_code": "PH",
+      "swift":  "BNORPHMM",
+      "minLength": 12,
+      "maxLength": 12,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Bank of the Philippine Islands (BPI)",
+      "name_ka": "Bank of the Philippine Islands (BPI)",
+      "country_code": "PH",
+      "swift":  "BOPIPHMM",
+      "minLength": 10,
+      "maxLength": 10,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Land Bank of the Philippines",
+      "name_ka": "Land Bank of the Philippines",
+      "country_code": "PH",
+      "swift":  "TLBPPHMM",
+      "minLength": 10,
+      "maxLength": 16,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Philippine National Bank (PNB)",
+      "name_ka": "Philippine National Bank (PNB)",
+      "country_code": "PH",
+      "swift":  "PNBMPHMM",
+      "minLength": 12,
+      "maxLength": 12,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Security Bank Corporation",
+      "name_ka": "Security Bank Corporation",
+      "country_code": "PH",
+      "swift":  "SETCPHMM",
+      "minLength": 13,
+      "maxLength": 13,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "China Banking Corporation",
+      "name_ka": "China Banking Corporation",
+      "country_code": "PH",
+      "swift":  "CHBKPHMM",
+      "minLength": 12,
+      "maxLength": 12,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Development Bank of the Philippines (DBP)",
+      "name_ka": "Development Bank of the Philippines (DBP)",
+      "country_code": "PH",
+      "swift":  "DBPHPHMM",
+      "minLength": 10,
+      "maxLength": 13,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Union Bank of the Philippines (UBP)",
+      "name_ka": "Union Bank of the Philippines (UBP)",
+      "country_code": "PH",
+      "swift":  "UBPHPHMM",
+      "minLength": 12,
+      "maxLength": 12,
+      "countries": ["Philippines"]
+    },
+    {
+      "name_en": "Rizal Commercial Banking Corporation (RCBC)",
+      "name_ka": "Rizal Commercial Banking Corporation (RCBC)",
+      "country_code": "PH",
+      "swift":  "RCBCPHMM",
+      "minLength": 10,
+      "maxLength": 10,
+      "countries": ["Philippines"]
+    }
+  ]
+}

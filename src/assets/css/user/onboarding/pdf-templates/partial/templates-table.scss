@@ -1,0 +1,40 @@
+.pdfTemplate_table {
+  border-spacing: 0;
+}
+.invoice_table_header th {
+  color: #f2f2f2;
+}
+
+.pdfTemplate_table th,
+.pdfTemplate_table td {
+  text-align: center;
+  font-weight: bold;
+}
+.pdfTemplate_table td {
+  padding: 10px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.isGreen th {
+  color: #f2f2f2;
+  background-color: #00d369;
+  height: 1.5rem;
+}
+.isPink {
+  border-bottom: 4px solid #f0535c;
+}
+.isPink th {
+  background-color: #fdeeef;
+  height: 1.5rem;
+}
+.isPlain th {
+  height: 1.5rem;
+  color: #2a2a2a;
+  border-top: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+}
+.isPink tr:nth-child(2n-2) td {
+  background: #f2f2f2;
+}
+.isGreen tr td {
+  background: #f2f2f2;
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:none;stroke:#3d3d3d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px}
+        </style>
+    </defs>
+    <g id="prefix__bar-chart" transform="translate(-5 -3.332)">
+        <path id="prefix__Line_12" d="M0 10L0 0" class="prefix__cls-1" data-name="Line 12" transform="translate(12 8.332)"/>
+        <path id="prefix__Line_13" d="M0 14L0 0" class="prefix__cls-1" data-name="Line 13" transform="translate(18 4.332)"/>
+        <path id="prefix__Line_14" d="M0 4L0 0" class="prefix__cls-1" data-name="Line 14" transform="translate(6 14.332)"/>
+    </g>
+</svg>

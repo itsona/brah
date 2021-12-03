@@ -1,0 +1,155 @@
+{
+  "name": "Georgia",
+  "currency": "GEL",
+  "navigation": {
+    "employees": {
+      "display": true
+    },
+    "payroll": {
+      "display": true
+    }
+  },
+  "languages": {
+    "default": "ka",
+    "dialect": "ka",
+    "display": ["ka", "en"]
+  },
+  "banks": ["TBC", "BOG"],
+  "pages": {
+    "User.Account.Company": {
+      "display": true,
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "RSImport": {
+              "display": true
+            },
+            "vat_included": {
+              "display": true,
+              "validations": [""]
+            },
+            "vat_amount": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ],
+              "default": [
+                {
+                  "text": "18%",
+                  "value": 18
+                },
+                {
+                  "text": "0",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "onBoarding": {
+      "display": true,
+      "sections": {
+        "RSImport": {
+          "display": true
+        }
+      }
+    },
+    "invoice": {
+      "display": true,
+      "sections": {
+        "items": {
+          "display": true,
+          "calculation_including_tax": false,
+          "fields": {
+            "vat_per_item": {
+              "display": true,
+              "disabled": true,
+              "validations": []
+            }
+          }
+        },
+        "summary": {
+          "display": true,
+          "calculation_including_tax": false,
+          "fields": {
+            "vat": {
+              "display": true,
+              "disabled": true,
+              "validations": []
+            },
+            "vat_included": {
+              "display": true,
+              "disabled": true,
+              "validations": []
+            }
+          }
+        },
+        "preview": {
+          "display": true,
+          "fields":{
+            "import_to_rs": {
+              "display": true
+            }
+          }
+        }
+      }
+    },
+    "generator": {
+      "display": true,
+      "sections": {
+        "items": {
+          "display": true,
+          "fields": {
+            "vat_included": {
+              "display": false,
+              "disabled": true,
+              "validations": []
+            }
+          }
+        },
+        "summary": {
+          "display": true,
+          "fields": {
+            "vat": {
+              "display": true,
+              "disabled": true,
+              "validations": []
+            },
+            "vat_included": {
+              "display": false,
+              "disabled": true,
+              "validations": []
+            }
+          }
+        }
+      }
+    },
+    "payment.plans": {
+      "display": true,
+      "sections": {
+        "free": {
+          "name": "free",
+          "display": true,
+          "fields": {
+            "payroll": {
+              "display": true
+            }
+          }
+        },
+
+        "premium": {
+          "name": "premium",
+          "display": true,
+          "fields": {
+            "rs_integration": {
+              "display": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

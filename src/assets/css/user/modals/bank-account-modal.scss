@@ -1,0 +1,22 @@
+.body-text {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  color: #2a2a2a;
+  margin: 10px auto;
+}
+.modal-footer {
+  justify-content: center;
+}
+.justify-content-center {
+  justify-content: center;
+}
+@media (max-width: 330px) {
+  .banking-information-title {
+    font-size: 15px !important;
+  }
+  .delete-icon {
+    margin-left: 8px !important;
+  }
+}

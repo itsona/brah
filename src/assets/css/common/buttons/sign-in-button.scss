@@ -1,0 +1,23 @@
+.sign_in_button.nav {
+  border-radius: 20px;
+  background-color: #293961 !important;
+  border: 2px solid #f37451 !important;
+}
+.sign_in_button.nav:hover {
+  border: 2px solid #00d369 !important;
+  color: white !important;
+}
+.sign_in_button.nav span:hover {
+  color: white !important;
+}
+
+.sign_in_button {
+  border-radius: 20px;
+  background-color: rgb(0, 211, 105) !important;
+  border-color: rgb(0, 211, 105) !important;
+  letter-spacing: 0;
+  color: #f2f2f2;
+}
+.sign_in_button:hover {
+  color: #f2f2f2 !important;
+}

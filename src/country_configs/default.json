@@ -1,0 +1,868 @@
+{
+  "name": "default",
+  "currency": "USD",
+  "navigation": {
+    "employees": {
+      "display": false
+    },
+    "payroll": {
+      "display": false
+    }
+  },
+  "languages": {
+    "default": "en",
+    "dialect": "en",
+    "display": ["en", "ka"]
+  },
+  "banks": [],
+  "pages": {
+    "User.Account.Company": {
+      "display": true,
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "company_name": {
+              "display": true,
+              "validations": ["required"]
+            },
+            "RSImport": {
+              "display": false
+            },
+            "display_name": {
+              "display": false,
+              "validations": [""]
+            },
+            "email": {
+              "display": true,
+              "validations": ["required", "email"]
+            },
+            "country": {
+              "display": true,
+              "validations": ["required"]
+            },
+            "tax_id": {
+              "display": true,
+              "validations": [""]
+            },
+            "vat_payer": {
+              "display": true,
+              "validations": [""]
+            },
+            "vat_included": {
+              "display": false,
+              "validations": [""]
+            },
+            "vat_amount": {
+              "display": true,
+              "validations": ["numeric"],
+              "default":  []
+            },
+            "currency": {
+              "display": true,
+              "validations": ["required"]
+            }
+          }
+        },
+        "choose_template": {
+          "display": true,
+          "templates": ["GreenInvoiceTemplate", "PlainInvoiceTemplate", "PinkInvoiceTemplate"]
+        },
+        "banking_information": {
+          "display": true,
+          "limit": 4
+        },
+        "billing_information": {
+          "display": true,
+          "fields": {
+            "city": {
+              "display": true,
+              "validations": []
+            },
+            "address": {
+              "display": true,
+              "validations": []
+            },
+            "zip": {
+              "display": true,
+              "validations": ["numeric", "max:12"]
+            },
+            "phone": {
+              "display": true,
+              "validations": []
+            }
+          }
+        },
+        "more_information": {
+          "display": true,
+          "fields": {
+            "industry": {
+              "display": true,
+              "validations": []
+            },
+            "number_of_employees": {
+              "display": true,
+              "validations": []
+            }
+          }
+        }
+      }
+    },
+    "User.Customer": {
+      "display": true,
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "name": {
+              "display": true,
+              "validations": ["required"]
+            },
+            "email": {
+              "display": true,
+              "validations": ["email"]
+            },
+            "tax_id": {
+              "display": true,
+              "validations": []
+            }
+          }
+        },
+        "billing_information": {
+          "display": true,
+          "fields": {
+            "country": {
+              "display": true,
+              "validations": []
+            },
+            "city": {
+              "display": true,
+              "validations": []
+            },
+            "address": {
+              "display": true,
+              "validations": []
+            },
+            "zip": {
+              "display": true,
+              "validations": ["numeric"]
+            },
+            "phone": {
+              "display": true,
+              "validations": []
+            }
+          }
+        },
+        "more_information": {
+          "display": true,
+          "fields": {
+            "contact_person": {
+              "display": true,
+              "validations": []
+            },
+            "web_page": {
+              "display": true,
+              "validations": []
+            },
+            "notes": {
+              "display": true,
+              "validations": []
+            }
+          }
+        }
+      }
+    },
+    "invoice": {
+      "display": true,
+      "sections": {
+        "seller_details": {
+          "display": true,
+          "fields": {
+            "company_edit": {
+              "display": true
+            },
+            "logo": {
+              "display": true
+            },
+            "upload_logo": {
+              "display": false
+            },
+            "remove_logo": {
+              "display": false
+            }
+          }
+        },
+        "invoice_information": {
+          "display": true,
+          "fields":{
+            "invoice_date": {
+              "display": true,
+              "validations": ["required", "date"]
+            },
+
+            "payment_date": {
+              "display": true,
+              "validations": ["required", "date"]
+            },
+            "payment_terms": {
+              "display": true
+            }
+          }
+        },
+        "preview": {
+          "display": true,
+          "fields":{
+            "import_to_rs": {
+              "display": false
+            }
+          }
+        },
+        "client": {
+          "display": true
+        },
+        "shipping_details": {
+          "display": false
+        },
+        "items": {
+          "display": true,
+          "calculation_including_tax": false,
+          "fields": {
+            "item_name": {
+              "display": true,
+              "validations": [
+                "required"
+              ]
+            },
+            "goods": {
+              "display": false,
+              "validations": [
+                "required"
+              ]
+            },
+            "hsn/sac": {
+              "display": false,
+              "validations": [
+                "required"
+              ]
+            },
+            "quantity": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "unit": {
+              "display": true,
+              "validations": []
+            },
+            "unit_price": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "vat_percentage": {
+              "display": false,
+              "validations": [
+                "min:0",
+                "max:100"
+              ]
+            },
+            "vat_net": {
+              "display": false,
+              "disabled": false,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "net_amount": {
+              "display": true,
+              "disabled": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "vat_per_item": {
+              "display": false,
+              "disabled": false,
+              "validations": []
+            },
+            "business_name": {
+              "display": false,
+              "validations": []
+            }
+          }
+        },
+        "summary": {
+          "display": true,
+          "fields": {
+            "subtotal": {
+              "display": true,
+              "disabled": true
+            },
+            "discount": {
+              "display": true,
+              "validations": ["numeric", "min:0", "max:100"]
+            },
+            "shipping": {
+              "display": false,
+              "validations": ["numeric"]
+            },
+            "vat": {
+              "display": true,
+              "validations": ["numeric", "min:0", "max:100"]
+            },
+            "total": {
+              "display": true,
+              "disabled": true
+            },
+            "comment": {
+              "display": true
+            },
+            "paid_amount": {
+              "display": true
+            }
+          }
+        },
+        "banking_information": {
+          "display": true
+        },
+        "footer": {
+          "display": false
+        }
+      }
+    },
+    "generator": {
+      "display": true,
+      "sections": {
+        "invoice_data": {
+          "display": true,
+          "fields": {
+            "invoice_number": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": [],
+              "prefix": "#"
+            },
+            "invoice_date": {
+              "display": true,
+              "type": "date",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "payment_date": {
+              "display": true,
+              "type": "date",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "payment_terms": {
+              "display": true,
+              "component": "autocomplete",
+              "validations": ["required"]
+            },
+            "currency": {
+              "display": true,
+              "component": "currency-selector",
+              "validations": []
+            }
+          }
+        },
+        "company": {
+          "display": true,
+          "fields":{
+            "seller_name": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "company_id": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "address": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "phone": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "email": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["email"]
+            }
+          }
+        },
+        "customer": {
+          "display": true,
+          "fields": {
+            "name": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "company_id": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "address": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "phone": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "email": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["email"]
+            }
+          }
+        },
+        "items": {
+          "display": true,
+          "calculation_including_tax": false,
+          "fields": {
+            "item_name": {
+              "display": true,
+              "validations": [
+                "required"
+              ]
+            },
+            "quantity": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "unit": {
+              "display": true,
+              "validations": []
+            },
+            "unit_price": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "vat_percentage": {
+              "display": false,
+              "validations": [
+                "min:0",
+                "max:100"
+              ]
+            },
+            "vat_net": {
+              "display": false,
+              "disabled": false,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "net_amount": {
+              "display": true,
+              "disabled": true,
+              "validations": [
+                "numeric"
+              ]
+            },
+            "vat_per_item": {
+              "display": false,
+              "disabled": false,
+              "validations": []
+            },
+            "business_name": {
+              "display": false,
+              "validations": []
+            }
+          }
+        },
+        "summary": {
+          "display": true,
+          "fields": {
+            "subtotal": {
+              "display": true,
+              "disabled": true
+            },
+            "discount": {
+              "display": true,
+              "validations": ["numeric", "min:0", "max:100"]
+            },
+            "shipping": {
+              "display": false,
+              "validations": ["numeric"]
+            },
+            "vat": {
+              "display": true,
+              "validations": ["numeric", "min:0", "max:100"]
+            },
+            "total": {
+              "display": true,
+              "disabled": true
+            },
+            "comment": {
+              "display": true
+            },
+            "paid_amount": {
+              "display": true
+            }
+          }
+        },
+        "banking_information": {
+          "display": true,
+          "fields": {
+            "receiver": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "account_number": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "bank_name": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "bank_code": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            },
+            "comment": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": []
+            }
+          }
+        },
+        "footer": {
+          "display": false
+        }
+      }
+    },
+    "payment.plans": {
+      "display": true,
+      "sections": {
+        "free": {
+          "name": "free",
+          "display": true,
+          "fields": {
+            "invoice_count": {
+              "display": true
+            },
+            "clients_count": {
+              "display": true
+            },
+            "unlimited_companies": {
+              "display": true
+            },
+            "users_count": {
+              "display": true
+            },
+            "payroll": {
+              "display": false
+            },
+            "reports": {
+              "display": true
+            },
+            "financial_calculators": {
+              "display": true
+            },
+            "single_currency": {
+              "display": true
+            }
+          }
+        },
+        "basic": {
+          "name": "basic",
+          "display": true,
+          "price": 5,
+          "price_digits": ".00",
+          "cheap_price": 3,
+          "cheap_price_digits": ".75",
+          "yearly_price": 45,
+          "fields": {
+            "invoice_count": {
+              "display": true
+            },
+            "clients_count": {
+              "display": true
+            },
+            "unlimited_companies": {
+              "display": true
+            },
+            "users_count": {
+              "display": true
+            },
+            "recurring_invoices": {
+              "display": true
+            },
+            "financial_calculators": {
+              "display": true
+            },
+            "currencies_count": {
+              "display": true
+            },
+            "receivables_management": {
+              "display": true
+            }
+          }
+        },
+        "premium": {
+          "name": "premium",
+          "display": true,
+          "price": 20,
+          "price_digits": ".00",
+          "cheap_price": 15,
+          "cheap_price_digits": ".00",
+          "yearly_price": 180.00,
+          "fields": {
+            "invoice_count": {
+              "display": true
+            },
+            "clients_count": {
+              "display": true
+            },
+            "unlimited_companies": {
+              "display": true
+            },
+            "users_count": {
+              "display": true
+            },
+            "recurring_invoices": {
+              "display": true
+            },
+            "financial_calculators": {
+              "display": true
+            },
+            "currencies_count": {
+              "display": true
+            },
+            "receivables_management": {
+              "display": true
+            },
+            "api_integrations": {
+              "display": true
+            },
+            "rs_integration": {
+              "display": false
+            },
+            "SMTP": {
+              "display": true
+            }
+          }}
+      }
+    },
+    "employee.create": {
+      "display": true,
+      "sections": {
+        "information": {
+          "display": true,
+          "fields": {
+            "first_name": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "last_name": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "personal_id": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required", "length:11","numeric"]
+            },
+            "address": {
+              "display": true,
+              "type": "text",
+              "component": "text-field",
+              "validations": ["required"]
+            },
+            "residence": {
+              "display": true,
+              "validations": []
+            },
+            "pension": {
+              "display": true,
+              "validations": []
+            }
+          }
+        },
+        "details": {
+          "display": true,
+          "fields": {
+            "agreement": {
+              "display": true,
+              "options": {
+                "full_time": {
+                  "display": true
+                },
+                "part_time": {
+                  "display": true
+                },
+                "contractor": {
+                  "display": true
+                }
+              }
+            },
+            "gross_amount": {
+              "display": true,
+              "validations": []
+            },
+            "net_amount": {
+              "display": true,
+              "validations": ["required", "min_value:0", "numeric"]
+            },
+            "start_date": {
+              "display": true,
+              "validations": []
+            },
+            "end_date": {
+              "display": true,
+              "validations": []
+            },
+            "salary_day": {
+              "display": false,
+              "validations": []
+            },
+            "comment": {
+              "display": true
+            }
+          }
+        },
+        "buttons": {
+          "clear": {
+            "display": true,
+            "component": "v-btn"
+          },
+          "save": {
+            "display": true,
+            "component": "v-btn"
+          }
+        }
+      }
+    },
+    "employees.dashboard": {
+      "display": true,
+      "sections": {
+        "table": {
+          "display": true,
+          "fields": {
+            "first_name": {
+              "display": true
+            },
+            "last_name": {
+              "display": true
+            },
+            "net_amount": {
+              "display": true
+            },
+            "last_payroll": {
+              "display": true
+            }
+          }
+        }
+      }
+    },
+    "payroll.dashboard": {
+      "display": true,
+      "sections": {
+        "table": {
+          "display": true,
+          "fields": {
+            "employee_name": {
+              "display": true
+            },
+            "payment_date": {
+              "display": true
+            },
+            "total_net": {
+              "display": true
+            },
+            "status": {
+              "display": true
+            },
+            "total_cost": {
+              "display": true
+            }
+          }
+        }
+      }
+    },
+    "payroll.create": {
+      "display": true,
+      "sections": {
+        "information": {
+          "display": true,
+          "fields": {
+            "employee": {
+              "display": true
+            },
+            "information": {
+              "display": true
+            },
+            "payment_date": {
+              "display": true
+            },
+            "paid": {
+              "display": true
+            },
+            "fixed_gross": {
+              "display": true
+            },
+            "fixed_net": {
+              "display": true,
+              "validations": ["required", "min_value:0", "numeric"]
+            },
+            "gross_amount": {
+              "display": true
+            },
+            "benefit_deduction": {
+              "display": true
+            },
+            "start_date": {
+              "display": true
+            },
+            "end_date": {
+              "display": true
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

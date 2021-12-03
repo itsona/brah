@@ -1,0 +1,11 @@
+{
+  "name": "pakistan",
+  "currency": "PKR",
+  "languages": {
+    "default": "en",
+    "dialect": "en",
+    "display": ["en", "ka"]
+  },
+  "banks": [],
+  "pages": {}
+}

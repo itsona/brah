@@ -1,0 +1,20 @@
+.payment_discount_container {
+  position: relative;
+  background-color: #00d369;
+}
+.discount_container_arrow::before {
+  content: "";
+  position: absolute;
+  background-color: #00d369;
+  height: 30px;
+  width: 30px;
+  left: -15px;
+  top: 6px;
+  transform: rotate(45deg);
+  z-index: 0 !important;
+}
+.discount_icon {
+  position: absolute;
+  top: -32px;
+  right: -30px;
+}

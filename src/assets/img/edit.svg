@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.57" height="12.467" viewBox="0 0 12.57 12.467">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:none;stroke:#293961;stroke-linecap:round;stroke-linejoin:round}
+        </style>
+    </defs>
+    <g id="prefix__edit_4_" data-name="edit (4)" transform="translate(.5 .5)">
+        <path id="prefix__Path_89" d="M7.129 4H3.14A1.14 1.14 0 0 0 2 5.14v7.978a1.14 1.14 0 0 0 1.14 1.14h7.978a1.14 1.14 0 0 0 1.14-1.14V9.129" class="prefix__cls-1" data-name="Path 89" transform="translate(-2 -2.791)"/>
+        <path id="prefix__Path_90" d="M13.984 2.233a1.209 1.209 0 1 1 1.71 1.71l-5.415 5.413L8 9.926l.57-2.279z" class="prefix__cls-1" data-name="Path 90" transform="translate(-4.581 -1.879)"/>
+    </g>
+</svg>

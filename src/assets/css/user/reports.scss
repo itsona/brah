@@ -1,0 +1,44 @@
+#reports {
+  .reports-chart {
+    border: solid 1px #d4d4d4;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    padding: 3% 18.5%;
+    justify-content: center;
+    margin-left: 0;
+  }
+  @media (max-width: 499px) {
+    .reports-chart {
+      padding: 3% 5%;
+    }
+  }
+  @media (max-width: 330px) {
+    .text-sm-fright {
+      text-align: right !important;
+    }
+    .reports-header {
+      display: flex !important;
+    }
+  }
+}
+
+.v-card__text,
+.v-card__title {
+  word-break: normal !important;
+}
+.card-outter {
+  position: relative;
+  padding-bottom: 50px;
+}
+.card-actions {
+  position: absolute;
+  bottom: 0;
+  padding-bottom: 10px;
+  width: 100%;
+}
+@media (max-width: 610px) and (min-width: 600px) {
+  #inflow-card {
+    height: 240px !important;
+  }
+}

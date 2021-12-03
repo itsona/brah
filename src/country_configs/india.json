@@ -1,0 +1,157 @@
+{
+  "name": "india",
+  "currency": "PKR",
+  "languages": {
+    "default": "en",
+    "dialect": "en",
+    "display": ["en", "ka"]
+  },
+  "banks": [],
+  "pages": {
+    "display": true,
+    "invoice": {
+      "sections": {
+        "shipping_details": {
+          "display": true,
+          "fields": {
+            "tax_id": {
+              "display": true
+            },
+            "country": {
+              "display": true
+            },
+            "region": {
+              "display": true
+            },
+            "address": {
+              "display": true
+            },
+            "zip": {
+              "display": true
+            },
+            "email": {
+              "display": true
+            },
+            "phone": {
+              "display": true
+            }
+          }
+        },
+        "items": {
+          "display": true,
+          "calculation_including_tax": false,
+          "fields": {
+            "goods": {
+              "display": true,
+              "hideTitle": true,
+              "validations": [
+                "required"
+              ]
+            },
+            "hsn/sac": {
+              "display": true,
+              "validations": [
+                "required"
+              ]
+            },
+            "vat_percentage": {
+              "display": true,
+              "validations": [
+                "min:0",
+                "max:100"
+              ]
+            },
+            "total": {
+              "display": true,
+              "validations": [
+                "min:0",
+                "max:100"
+              ]
+            },
+            "net_amount": {
+              "display": false,
+              "validations": [
+                "min:0",
+                "max:100"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "User.Account.Company": {
+      "display": true,
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "region": {
+              "display": true,
+              "validations": [
+                "required"
+              ]
+            },
+            "vat_amount": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ],
+              "default": [
+                {
+                  "text": "28%",
+                  "value": 28
+                },
+                {
+                  "text": "18%",
+                  "value": 18
+                },
+                {
+                  "text": "12%",
+                  "value": 12
+                },
+                {
+                  "text": "5%",
+                  "value": 5
+                },
+                {
+                  "text": "Exempt",
+                  "value": 0
+                },
+                {
+                  "text": "0",
+                  "value": false
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "User.Customer": {
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "vat_payer": {
+              "display": true,
+              "validations": []
+            }
+          }
+        },
+        "billing_information": {
+          "display": true,
+          "fields": {
+            "city": {
+              "display": false,
+              "validations": []
+            },
+            "region": {
+              "display": true,
+              "validations": []
+            }
+          }
+        }
+      }
+    }
+  }
+}

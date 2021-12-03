@@ -1,0 +1,115 @@
+
+#invoice_no {
+  text-align: center;
+  color: #293961;
+  font-weight: 600;
+}
+#invoice-status > .v-chip__content {
+  margin: auto !important;
+}
+.v-text-field--filled > .v-input__control > .v-input__slot,
+.v-text-field--full-width > .v-input__control > .v-input__slot,
+.v-text-field--outlined > .v-input__control > .v-input__slot {
+  min-height: 50px !important;
+}
+
+.generator.v-text-field--filled > .v-input__control > .v-input__slot {
+  min-height: unset !important;
+}
+.theme--light.v-expansion-panels.v-expansion-panels--focusable
+  .v-expansion-panel-header--active:hover::before,
+.theme--light.v-expansion-panels.v-expansion-panels--focusable
+  .v-expansion-panel-header--active::before {
+  opacity: 0.06 !important;
+}
+
+.v-expansion-panels:not(.v-expansion-panels--accordion):not(.v-expansion-panels--tile)
+  > .v-expansion-panel--active {
+  border-radius: 10px !important;
+}
+
+.v-sheet.v-card {
+  border-radius: 10px;
+}
+
+.v-expansion-panel {
+  border-radius: 10px !important;
+}
+
+#items-table .v-data-table-header th:not(.header-title){
+  font-size: 16px !important;
+  color: #293961;
+  text-align: center !important;
+}
+
+
+
+#save_menu_up {
+  min-width: auto !important;
+  width: 25% !important;
+}
+
+.invoice-item-title {
+  width: 35%;
+}
+
+.tax-%-title {
+  width: 10%;
+}
+
+.invoice-item-input {
+  // TODO Input field overflow goes to new line !!
+}
+
+.bank-name-and-currency {
+  width: 100%;
+  margin-left: 10%;
+}
+.products-text {
+  font-size: 14px;
+}
+.shipping_input input::placeholder,
+.v-application--is-ltr .v-text-field__suffix {
+  color: #666666 !important;
+  opacity: 1.5;
+  font-weight: bold;
+}
+.shipping_input input {
+  text-align: right;
+}
+
+@media (max-width: 959px) {
+  .pl-25p-sm {
+    margin-left: 15%;
+  }
+}
+.border-radius-l-10 {
+  border-top-left-radius: 10px;
+}
+.border-radius-r-10 {
+  border-top-right-radius: 10px;
+}
+#items-table th {
+  background-color: #f2f2f2;
+  height: 65px;
+}
+@media (max-width: 599px) {
+  #items-table thead {
+    display: none;
+  }
+  #save_button span {
+    margin-left: 20%;
+  }
+
+  .calculator-divider {
+    width: 80% !important;
+  }
+}
+@media (max-width: 330px) {
+  //.v-btn:not(.v-btn--round).v-size--default {
+  //  width: 95% !important;
+  //}
+  .products-text {
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "code": "ka",
+  "messages": {
+    "alpha": "{_field_} შეიძლება შეიცავდეს მხოლოდ ასობგერებს",
+    "alpha_num": "{_field_} შეიძლება შეიცავდეს მხოლოდ ციფრებს",
+    "alpha_dash": "{_field_} შეიძლება შეიცავდეს ციფრებს, ასობგერებს, ასევე ტირეებს და ქვედა-ტირეებს",
+    "alpha_spaces": "{_field_} შეიძლება შეიცავდეს ასობგერებს და ცარიელ სიმბოლოებს",
+    "between": "The {_field_} field must be between {min} and {max}",
+    "confirmed": "{_field_} არ ემთხვევა",
+    "digits": "{_field_} უნდა შეიცავდეს მხოლოდ ციფრებს და იყოს {length} სიგრძის",
+    "dimensions": "The {_field_} field must be {width} pixels by {height} pixels",
+    "email": "{_field_} უნდა იყოს ვალიდური ელ.ფოსტა",
+    "excluded": "The {_field_} field is not a valid value",
+    "ext": "The {_field_} field is not a valid file",
+    "image": "{_field_} უნდა იყოს სურათი",
+    "integer": "The {_field_} field must be an integer",
+    "length": "{_field_} უნდა იყოს {length} სიგრძის",
+    "max_value": "{_field_} უნდა იყოს ნაკლები ან ტოლი {max}ის",
+    "max": "{_field_} არ შეიძლება იყოს {length} სიმბოლოზე გრძელი",
+    "mimes": "The {_field_} field must have a valid file type",
+    "min_value": "The {_field_} field must be {min} or more",
+    "min": "{_field_} არ შეიძლება იყოს {length} სიმბოლოზე მოკლე",
+    "numeric": "{_field_} უნდა ჰქონდეს რიცხვითი მნიშვნელობა",
+    "oneOf": "The {_field_} field is not a valid value",
+    "regex": "The {_field_} field format is invalid",
+    "required_if": "The {_field_} field is required",
+    "required": "{_field_} არ შეიძლება იყოს ცარიელი",
+    "size": "The {_field_} field size must be less than {size}KB"
+  }
+}

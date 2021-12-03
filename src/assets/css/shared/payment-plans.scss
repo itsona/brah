@@ -1,0 +1,24 @@
+.payment_card {
+  background-color: white;
+  box-shadow: 6px 5px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 12px !important;
+}
+.card_list h3 {
+  margin-top: 8%;
+  opacity: 0.8;
+}
+.card_list {
+  flex-grow: 1;
+}
+.cards_container {
+  align-items: center;
+}
+
+.premium_card {
+  height: 90%;
+}
+.price-currency {
+  top: -15px;
+  left: -15px;
+  font-size: 20px;
+}

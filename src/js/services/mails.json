@@ -1,0 +1,22 @@
+{
+  "Google": {
+    "host": "smtp.gmail.com",
+    "port": 587
+  },
+  "Yahoo": {
+    "host": "smtp.mail.yahoo.com",
+    "port": 465
+  },
+  "Hotmail": {
+    "host": "smtp.live.com",
+    "port": 465
+  },
+  "Mail.ru": {
+    "host": "smtp.mail.ru",
+    "port": 465
+  },
+  "Other": {
+    "host": "",
+    "port": 0
+  }
+}

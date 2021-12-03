@@ -1,0 +1,34 @@
+.settings_tooltip {
+  top: 0;
+  left: 0;
+  margin-left: -40px;
+  margin-top: 7px;
+}
+
+.settings_header_tooltip {
+  top: 0;
+  left: 0;
+  margin-left: -40px;
+}
+
+@media (max-width: 960px) {
+  .settings_tooltip {
+    margin-left: -80px;
+    margin-top: 7px;
+  }
+
+  .settings_header_tooltip {
+    margin-left: -65px;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings_tooltip {
+    margin-left: -55px;
+    margin-top: 7px;
+  }
+
+  .settings_header_tooltip {
+    margin-left: -55px;
+  }
+}

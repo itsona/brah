@@ -1,0 +1,79 @@
+#invoices {
+  .status_indicator_width {
+    min-width: 39px !important;
+  }
+  td {
+    cursor: pointer;
+  }
+  @media (max-width: 470px) {
+    .create-btn-xs {
+      flex-basis: 50% !important;
+      flex-grow: 0 !important;
+      max-width: 60% !important;
+      text-align: left !important;
+    }
+
+    .text-sm-fright {
+      text-align: right !important;
+    }
+    .invoices-table
+    .theme--light.v-data-table
+    > .v-data-table__wrapper
+    > table
+    > thead
+    > tr
+    > th {
+      font-size: 15px;
+    }
+  }
+  .statistics-box-content {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .color-danger {
+    color: #f22828 !important;
+  }
+  .color-primary {
+    color: #293961 !important;
+  }
+
+  .color-secondary {
+    color: #00d369 !important;
+  }
+}
+
+.invoices-table
+  .theme--light.v-data-table
+  > .v-data-table__wrapper
+  > table
+  > thead
+  > tr
+  > th {
+  color: #293961 !important;
+  font-size: 16px;
+  font-weight: 550;
+}
+.invoices-table
+  .theme--light.v-data-table
+  > .v-data-table__wrapper
+  > table
+  > thead
+  > tr:last-child
+  > th {
+  border-top: 1px solid #293961 !important;
+  border-bottom: 1px solid #293961 !important;
+}
+@media (max-width: 500px) {
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
+  .v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > td,
+  .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+  .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
+  .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+    padding: 2px 8px 2px 2px !important;
+  }
+}
+
+.invoices-status-column {
+  width: 0;
+}

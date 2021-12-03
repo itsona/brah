@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="17.75" viewBox="0 0 16 17.75">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:none;stroke:#293961;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px}
+        </style>
+    </defs>
+    <g id="prefix__user" transform="translate(-3 -2)">
+        <path id="prefix__Path_67" d="M18 21v-2a3.775 3.775 0 0 0-3.5-4h-7A3.775 3.775 0 0 0 4 19v2" class="prefix__cls-1" data-name="Path 67" transform="translate(0 -2.25)"/>
+        <circle id="prefix__Ellipse_74" cx="3" cy="3" r="3" class="prefix__cls-1" data-name="Ellipse 74" transform="translate(8 3)"/>
+    </g>
+</svg>

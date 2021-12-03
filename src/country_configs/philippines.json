@@ -1,0 +1,66 @@
+{
+  "pages": {
+    "User.Account.Company": {
+      "display": true,
+      "sections": {
+        "basic_information": {
+          "display": true,
+          "fields": {
+            "vat_amount": {
+              "display": true,
+              "validations": [
+                "numeric"
+              ],
+              "default": [
+                {
+                  "text": "12%",
+                  "value": 12
+                },
+                {
+                  "text": "0",
+                  "value": 0
+                },
+                {
+                  "text": "Exempt",
+                  "value": "Exempt"
+                }
+              ]
+            },
+            "tax_id": {
+              "display": true,
+              "validations": [
+                "min:11",
+                "max:15"
+              ],
+              "text_rules": true
+            },
+            "business_name": {
+              "display": true,
+              "validations": [],
+              "default": [
+                "Sale of goods",
+                "Sale of services",
+                "Sale of goods and services"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "invoice": {
+      "display": true,
+      "sections": {
+        "items": {
+          "display": true,
+          "fields": {
+            "vat_per_item": {
+              "display": true,
+              "disabled": true,
+              "validations": []
+            }
+          }
+        }
+      }
+    }
+  }
+}

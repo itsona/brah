@@ -1,0 +1,54 @@
+#aged_receivables {
+  & table > thead > tr > th {
+    color: #293961 !important;
+    font-size: 16px;
+    font-weight: 550;
+  }
+
+  & .age-table-header {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    border-top: 2px solid #293961;
+  }
+
+  & .age-header-title {
+    display: inline-block;
+    margin: 12px 5px 12px 15% !important;
+  }
+
+  & .background-gray-and-border {
+    background-color: #f2f2f2 !important;
+  }
+
+  & .border_top {
+    border-top: 2px solid #293961 !important;
+  }
+}
+
+@media (max-width: 960px) {
+  #aged_receivables {
+    & th {
+      border-top: 1px solid black;
+    }
+
+    & .age-table-header {
+      display: none !important;
+    }
+
+    & .border-sm-bottom {
+      border-bottom: 2px solid;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .padding-left-xs-10 {
+    padding-left: 10px !important;
+
+    & span {
+      padding-left: 10px;
+    }
+  }
+
+}

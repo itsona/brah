@@ -1,0 +1,12 @@
+{
+  "words": {
+    "vat": "Tax"
+  },
+  "snippets": {
+    "tax_id": "Registration Number",
+    "vat_payer": "Tax Payer"
+  },
+  "dialog": {
+    "pakistan_payment_message": "We see you’re from Pakistan. If you encounter any problems during the purchase via PayPal drop us a message and we’ll activate your chosen paid plan manually."
+  }
+}
