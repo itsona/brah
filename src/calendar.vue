@@ -9,7 +9,7 @@
                   outlined
                   class="mr-4"
                   color="grey darken-2"
-                  @click="setToday"
+                  @click="type = 'day'"
               >
                 Today
               </v-btn>
@@ -82,7 +82,15 @@
                 @click:more="viewDay"
                 @click:date="viewDay"
                 @change="updateRange"
-            ></v-calendar>
+            >
+              <template v-slot:day-body="{ date, week }">
+                <div
+                    class="v-current-time"
+                    :class="{ first: date === week[0].date }"
+                    :style="{ top: nowY }"
+                ></div>
+              </template>
+            </v-calendar>
             <v-menu
                 v-model="selectedOpen"
                 :close-on-content-click="false"
@@ -111,7 +119,9 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-text>
-                  <span v-html="selectedEvent.details"></span>
+                  <span
+                      class="d-grid"
+                      v-for="(item, key) in selectedEvent.details" :key="key"><v-row class="justify-space-between detail">{{key}}: <span id="detail-item">{{item}}</span></v-row><br></span>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn
@@ -128,11 +138,14 @@
         </v-col>
       </v-row>
 </template>
-<script>
 
+
+
+<script>
 export default {
 	name: "App",
 	data: () => ({
+		ready: false,
 		focus: "",
 		type: "month",
 		typeToLabel: {
@@ -146,11 +159,34 @@ export default {
 		events: [],
 		colors: ["blue", "indigo", "deep-purple", "cyan", "green", "orange", "grey darken-1"],
 		names: ["თამუნა", "ხვიჩა", "მაია", "გოჩა",],
+		styilistColor: {
+			"თამუნა": "blue",
+			"ხვიჩა": "indigo",
+			"მაია": "cyan",
+			"გოჩა": "orange"
+		},
+		prices: {"თმის შეჭრა": "15 ლარი", "თმის დავარცხნა": "10 ლარი", "თმის შეღებვა": "25 ლარი", "წვერის გასწორება": "20 ლარი"}
 	}),
 	mounted () {
+		this.ready = true;
+		this.scrollToTime();
+		this.updateTime();
+		this.ready = true;
 		this.$refs.calendar.checkChange();
 	},
 	methods: {
+		getCurrentTime () {
+			return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0;
+		},
+		scrollToTime () {
+			const time = this.getCurrentTime();
+			const first = Math.max(0, time - (time % 30) - 30);
+
+			this.cal.scrollToTime(first);
+		},
+		updateTime () {
+			setInterval(() => this.cal.updateTimes(), 60 * 1000);
+		},
 		viewDay ({ date }) {
 			this.focus = date;
 			this.type = "day";
@@ -183,40 +219,398 @@ export default {
 
 			nativeEvent.stopPropagation();
 		},
-		updateRange ({ start, end }) {
-			const events = [];
+		updateRange () {
+			const events = [
+				{
+					name:"თამუნა: თმის შეჭრა",
+					start: new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"],
+					details: {
+					  "ფასი": this.prices["თმის შეჭრა"],
+						"კლიენტი": "testClient1",
+						"დაწყების დრო": new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+						"დასრულების დრო": new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+						"პირადი ნომერი": "012345678912"
+					}
+				},
+				{
+					name:"ხვიჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 02 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 02 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"გოჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 08 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 08 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"მაია: წვერის გასწორება",
+					start: new Date("Sat Dec 11 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 11 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"მაია: თმის შეჭრა",
+					start: new Date("Sat Dec 14 2021 12:20:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 14 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"გოჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 06 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 06 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"ხვიჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"თამუნა: წვერის გასწორება",
+					start: new Date("Sat Dec 14 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 14 2021 11:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"თამუნა: თმის შეჭრა",
+					start: new Date("Sat Dec 04 2021 17:20:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 04 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"მაია: თმის შეღებვა",
+					start: new Date("Sat Dec 09 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 09 2021 15:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"გოჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 19 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 19 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"ხვიჩა: წვერის გასწორება",
+					start: new Date("Sat Dec 21 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 21 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"მაია: თმის შეჭრა",
+					start: new Date("Sat Dec 22 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 22 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"თამუნა: თმის შეღებვა",
+					start: new Date("Sat Dec 24 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 24 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"ხვიჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 28 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 28 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"გოჩა: წვერის გასწორება",
+					start: new Date("Sat Dec 28 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 28 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"გოჩა: თმის შეჭრა",
+					start: new Date("Sat Dec 24 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 24 2021 11:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"ხვიჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 27 2021 10:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 27 2021 10:25:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"თამუნა: თმის დავარცხნა",
+					start: new Date("Sat Dec 30 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 30 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"მაია: წვერის გასწორება",
+					start: new Date("Sat Dec 29 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 29 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"ხვიჩა: თმის შეჭრა",
+					start: new Date("Sat Dec 05 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 05 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"გოჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 10 2021 17:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 10 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"მაია: თმის დავარცხნა",
+					start: new Date("Sat Dec 30 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 30 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"თამუნა: წვერის გასწორება",
+					start: new Date("Sat Dec 12 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 12 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"მაია: თმის შეჭრა",
+					start: new Date("Sat Dec 17 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 17 2021 13:15:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"ხვიჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 15 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 15 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"გოჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 16 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 16 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"თამუნა: წვერის გასწორება",
+					start: new Date("Sat Dec 16 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 16 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"თამუნა: თმის შეჭრა",
+					start: new Date("Sat Dec 13 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 13 2021 12:25:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"გოჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 13 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 13 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"ხვიჩა: თმის დავარცხნა",
+					start: new Date("Sat Dec 13 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 13 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"მაია: წვერის გასწორება",
+					start: new Date("Sat Dec 21 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 21 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"მაია: თმის შეჭრა",
+					start: new Date("Sat Dec 20 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 20 2021 15:25:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["მაია"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"ხვიჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 14 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 14 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"თამუნა: თმის დავარცხნა",
+					start: new Date("Sat Dec 25 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 25 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"გოჩა: წვერის გასწორება",
+					start: new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+				{
+					name:"თამუნა: თმის შეჭრა",
+					start: new Date("Sat Dec 07 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 07 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის შეჭრა"]
+				},
+				{
+					name:"გოჩა: თმის შეღებვა",
+					start: new Date("Sat Dec 06 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 06 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["გოჩა"],
+					timed: true,
+					price: this.prices["თმის შეღებვა"]
+				},
+				{
+					name:"თამუნა: თმის დავარცხნა",
+					start: new Date("Sat Dec 07 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 07 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["თამუნა"],
+					timed: true,
+					price: this.prices["თმის დავარცხნა"]
+				},
+				{
+					name:"ხვიჩა: წვერის გასწორება",
+					start: new Date("Sat Dec 03 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+					end: new Date("Sat Dec 03 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+					color: this.styilistColor["ხვიჩა"],
+					timed: true,
+					price: this.prices["წვერის გასწორება"]
+				},
+			];
 
-			const min = new Date(`${start.date}T00:00:00`);
-			const max = new Date(`${end.date}T23:59:59`);
-			if(this.updated) return;
-			this.updated = true;
-			const days = (max.getTime() - min.getTime()) / 86400000;
-			const eventCount = this.rnd(days, days + 20);
+			// const min = new Date(`${start.date}T00:00:00`);
+			// const max = new Date(`${end.date}T23:59:59`);
+			// if(this.updated) return;
+			// this.updated = true;
+			// const days = (max.getTime() - min.getTime()) / 86400000;
+			// const eventCount = this.rnd(days, days + 20);
+			//
+			// for (let i = 0; i < eventCount; i++) {
+			// 	const allDay = this.rnd(0, 3) === 0;
+			// 	const firstTimestamp = this.rnd(min.getTime(), max.getTime());
+			// 	const first = new Date(firstTimestamp - (firstTimestamp % 900000));
+			// 	const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
+			// 	const second = new Date(first.getTime() + secondTimestamp);
 
-			for (let i = 0; i < eventCount; i++) {
-				const allDay = this.rnd(0, 3) === 0;
-				const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-				const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-				const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-				const second = new Date(first.getTime() + secondTimestamp);
-
-				events.push({
-					name: this.names[this.rnd(0, this.names.length - 1)],
-					start: first,
-					end: second,
-					color: this.colors[this.rnd(0, this.colors.length - 1)],
-					timed: !allDay,
-				});
-			}
+			// events.push({
+			// 	name: this.names[this.rnd(0, this.names.length - 1)],
+			// 	start: first,
+			// 	end: second,
+			// 	color: this.colors[this.rnd(0, this.colors.length - 1)],
+			// 	timed: !allDay,
+			// });
+			//	}
 
 			this.events = events;
 		},
 		rnd (a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
-		},
+		}
 	},
+	computed: {
+		cal () {
+			return this.ready ? this.$refs.calendar : null;
+		},
+		nowY () {
+			return this.cal ? this.cal.timeToY(this.cal.times.now) + "px" : "-10px";
+		},
+	}
 };
 </script>
+
+<style lang="scss">
+.v-current-time {
+  height: 2px;
+  background-color: #ea4335;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
+  &.first::before {
+    content: '';
+    position: absolute;
+    background-color: #ea4335;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: -5px;
+    margin-left: -6.5px;
+  }
+}
+</style>
 
 <style lang="scss">
 </style>
@@ -286,7 +680,7 @@ h6 {
 }
 </style>
 
-<style>
+<style scoped>
 .introhighlightClass1 {
   background: white;
   /* z-index: -1; */
@@ -409,4 +803,14 @@ h6 {
     font-size: 18px !important;
   }
 }
+
+.detail {
+  padding: 0 10px;
+  font-size: 1.3em;
+}
+
+#detail-item {
+  font-weight: bold;
+}
+
 </style>
