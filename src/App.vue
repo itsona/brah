@@ -1,16 +1,20 @@
 <template>
   <v-app>
-    <vue-progress-bar/>
-    <calendar></calendar>
+    <v-row class="ma-0">
+      <vue-progress-bar/>
+      <stock-sidebar></stock-sidebar>
+      <calendar></calendar>
+    </v-row>
   </v-app>
 </template>
 
 <script>
 
 import Calendar from "./calendar";
+import StockSidebar from "./StockSidebar";
 export default {
 	name: "App",
-	components: {Calendar},
+	components: {StockSidebar, Calendar},
 };
 </script>
 
