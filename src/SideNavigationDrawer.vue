@@ -13,7 +13,7 @@
                             <v-icon class="mr-6 ml-2">
                                 {{ item.icon }}
                             </v-icon>
-                          {{$t(`words.${item.name}`)}}
+                          {{$t(item.name)}}
                         </v-list-item-icon>
                     </router-link>
                 </v-list-item>
