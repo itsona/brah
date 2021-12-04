@@ -1,5 +1,14 @@
 {
     "test": "iakobi",
     "start_time": "Start Time",
-    "currency": "GEL"
+    "end_time": "End Time",
+    "currency": "GEL",
+    "hair_trim": "Hair Trim",
+    "hair_brush": "Hair Brush",
+    "hair_paint": "Hair Paint",
+    "beard_trim": "Beard Trim",
+    "client": "Client",
+    "pin": "Pin",
+    "price": "Price",
+    "order_type": "Order Type"
 }
