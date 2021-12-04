@@ -1,6 +1,16 @@
 {
   "words": {
     "test": "test",
-    "start_time": "დაწყების დრო"
+    "start_time": "დაწყების დრო",
+    "end_time": "დამთავრების დრო",
+    "currency": "ლარი",
+    "hair_trim": "თმის შეჭრა",
+    "hair_brush": "თმის დავარცხნა",
+    "hair_paint": "თმის შეღებვა",
+    "beard_trim": "წვერის შესწორება",
+    "client": "კლიენტი",
+    "pin": "პირადი ნომერი",
+    "price": "ფასი",
+    "order_type": "შეკვეთის ტიპი"
   }
 }
