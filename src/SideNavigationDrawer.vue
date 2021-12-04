@@ -26,6 +26,15 @@
                       Close sidebar
                     </v-list-item-icon>
                 </v-list-item>
+                <v-list-item
+                    @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+                    class="daylight">
+                    <v-list-item-icon class="sidebar-icon" >
+                      <v-icon class="mr-6 ml-2">
+                        wb_sunny
+                      </v-icon>
+                    </v-list-item-icon>
+                </v-list-item>
             </v-list-item-group>
 
         </v-list>
@@ -73,6 +82,12 @@ export default {
   position: absolute;
   bottom: 0;
   width: 100%;
+}
+
+.daylight {
+  position: absolute;
+  width: 100%;
+  bottom: 70px
 }
 
 .drawer-items {

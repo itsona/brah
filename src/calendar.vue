@@ -140,10 +140,14 @@
         <v-dialog
             v-model="editDialog"
             width="600px"
+            scrollable
+            dark
         >
           <order-modal
               :order="selectedEvent"
-            @close="editDialog = false"
+              :order_types="Object.keys(prices)"
+              :names="names"
+              @close="editDialog = false"
             ></order-modal>
         </v-dialog>
       </v-row>
@@ -479,7 +483,7 @@ export default {
 					color: this.styilistColor["ხვიჩა"],
 					timed: true,
 					details: {
-						"order_type": "hair_Trim",
+						"order_type": "hair_trim",
 						"client": "testClient1",
 						"start_time": new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
 						"end_time": new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
