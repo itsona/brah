@@ -106,7 +106,7 @@
                     :color="selectedEvent.color"
                     dark
                 >
-                  <v-btn icon>
+                  <v-btn icon @click="editDialog = true">
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                   <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
@@ -136,18 +136,30 @@
             </v-menu>
           </v-sheet>
         </v-col>
+        <v-dialog
+            v-model="editDialog"
+            width="600px"
+        >
+          <order-modal
+              :order="selectedEvent"
+            @close="editDialog = false"
+            ></order-modal>
+        </v-dialog>
       </v-row>
 </template>
 
 
 
 <script>
+import OrderModal from "./orderModal";
 export default {
 	name: "App",
+	components: {OrderModal},
 	data: () => ({
 		ready: false,
 		focus: "",
-		type: "month",
+		editDialog: false,
+		type: "day",
 		typeToLabel: {
 			month: "Month",
 			week: "Week",
