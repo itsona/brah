@@ -7,7 +7,7 @@
                              active-class="none"
                              v-for="(item, idx) in items"
                              :key="idx"
-                             style="text-decoration: none; color: inherit;">  
+                             style="text-decoration: none; color: inherit;">
                     <div
                         class="sidebar-item item-active"
                     >
@@ -36,11 +36,11 @@ export default {
 			drawer: false,
 			items: [
 				{ name: "home", icon: "home", route: "stock-home" },
-				{ name: "Overview", icon: "analytics", route: "stock-overview" },
-				{ name: "Operate", icon: "build", route: "stock-operate" },
-				{ name: "Assortment", icon: "category", route: "stock-assortment" },
-				{ name: "Transfers", icon: "swap_calls", route: "stock-transfers" },
-				{ name: "Settings", icon: "settings", route: "stock-settings-main" },
+				{ name: "overview", icon: "analytics", route: "stock-overview" },
+				{ name: "assortment", icon: "category", route: "stock-assortment" },
+				{ name: "transfers", icon: "swap_calls", route: "stock-transfers" },
+				{ name: "operate", icon: "build", route: "stock-operate" },
+				{ name: "settings", icon: "settings", route: "stock-settings-main" },
 			],
 		};
 	},

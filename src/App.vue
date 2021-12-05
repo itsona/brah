@@ -17,7 +17,7 @@
             <v-col col="12" style="min-height: 80vh; padding-top: 24px">
               <v-row class="justify-space-between">
                 <v-card
-                    class="mx-6 pa-4 px-8"
+                    class="mx-4 pa-4 px-8"
                 >
                   <v-card-title>{{$t('total_day_income')}}</v-card-title>
                   <v-card-text>
@@ -30,7 +30,7 @@
                   </v-card-text>
                 </v-card>
                 <v-card
-                    class="mx-6 pa-4 px-8"
+                    class="mx-4 pa-4 px-8"
                 >
                   <v-card-title>{{$t('total_day_income')}}</v-card-title>
                   <v-card-text>
@@ -43,7 +43,7 @@
                   </v-card-text>
                 </v-card>
                 <v-card
-                    class="mx-6 pa-4 px-8"
+                    class="mx-4 pa-4 px-8"
                 >
                   <v-card-title>{{$t('total_day_income')}}</v-card-title>
                   <v-card-text>
@@ -56,7 +56,7 @@
                   </v-card-text>
                 </v-card>
                 <v-card
-                    class="mx-6 pa-4 px-8"
+                    class="mx-4 pa-4 px-8"
                 >
                   <v-card-title>{{$t('total_day_income')}}</v-card-title>
                   <v-card-text>
