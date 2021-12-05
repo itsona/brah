@@ -26,6 +26,10 @@
     "save": "SAVE",
     "pay_type": "Pay Type",
     "cash": "Cash",
-    "card": "Card"
+    "card": "Card",
+    "work_space": "Work Space",
+    "day_report": "Day Report",
+    "total_day_income": "Total Day Income",
+    "orders_count": "Orders Count"
 
 }

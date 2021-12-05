@@ -6,8 +6,8 @@
       <v-col col="12">
         <v-tabs v-model="activeTab">
           <v-tabs-slider />
-          <v-tab class="px-8">Active</v-tab>
-          <v-tab class="px-8">Invited</v-tab>
+          <v-tab class="px-8">{{ $t('work_space') }}</v-tab>
+          <v-tab class="px-8">{{ $t('day_report') }}</v-tab>
         </v-tabs>
         <v-tabs-items v-model="activeTab">
           <v-tab-item>
