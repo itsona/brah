@@ -32,10 +32,15 @@
                     active-class="none"
                     class="languages ml-5">
                   <a class="router-link-active">
-                    <v-btn class="sidebar-icon flex align-center justify-center " icon width="40px" height="40px">
+                    <v-btn class="sidebar-icon flex align-center justify-center " icon width="40px" height="40px"
+                           :class="{'opa-04': $i18n.locale === 'ka'}"
+                    :disabled="$i18n.locale === 'ka'"
+                    >
                       <img class="pa-2" :src="require('./assets/img/ka.svg')" @click="$i18n.locale = 'ka'; callSnack('set_to_ka')">
                     </v-btn>
-                    <v-btn class="sidebar-icon mx-3" icon width="40px" height="40px" >
+                    <v-btn class="sidebar-icon mx-3" icon width="40px" height="40px"
+                           :class="{'opa-04': $i18n.locale === 'en'}"
+                           :disabled="$i18n.locale === 'en'">
                       <img class="pa-2" :src="require('./assets/img/en.svg')" @click="$i18n.locale = 'en'; callSnack('set_to_ka')">
                     </v-btn>
                     <v-btn class="sidebar-icon flex align-center justify-center mr-3" icon width="40px" height="40px"
@@ -98,7 +103,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.opa-04 {
+  opacity: 40%;
+}
 .drawer-open-btn {
   width: 100%;
 }

@@ -16,7 +16,6 @@
           <v-tab-item>
             <v-col col="12" style="min-height: 80vh; padding-top: 24px">
               <v-row class="justify-space-between">
-
                 <v-card
                     class="mx-6 pa-4 px-8"
                 >
@@ -96,7 +95,11 @@ export default {
 	data() {
 		return {
 			activeTab: 0,
-			headers: [
+		};
+	},
+	computed: {
+		headers(){
+			return [
 				{
 					text: this.$t("employee"),
 					align: "start",
@@ -115,8 +118,10 @@ export default {
 				{
 					text: this.$t("orders_net_bought"),
 					sortable: true, value: "orders_net_bought" },
-			],
-			desserts: [
+			];
+		},
+		desserts(){
+			return [
 				{
 					employee: "ხვიჩა",
 					orders_count: 27,
@@ -166,8 +171,8 @@ export default {
 					orders_net_payed: 0,
 					orders_net_bought: 220,
 				},
-			]
-		};
+			];
+		}
 	},
 	created() {
 		this.$i18n.locale = window.localStorage.getItem("locale") || "ka";
