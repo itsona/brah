@@ -81,7 +81,7 @@
               </v-menu>
             </v-toolbar>
           </v-sheet>
-          <v-sheet height="650">
+          <v-sheet height="590">
             <v-calendar
                 ref="calendar"
                 :key="calendarKey"
