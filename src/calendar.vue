@@ -122,7 +122,7 @@
                   </v-btn>
                   <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-btn icon @click="deleteEvent">
+                  <v-btn icon @click="deleteDialogVisible = true">
                     <v-icon>delete</v-icon>
                   </v-btn>
                   <v-btn icon>
@@ -149,7 +149,7 @@
                   >
                     {{ $t('cancel') }}
                   </v-btn>
-                </v-card-actions>  
+                </v-card-actions>
               </v-card>
             </v-menu>
           </v-sheet>
@@ -171,6 +171,40 @@
               @added="addEvent"
             ></order-modal>
         </v-dialog>
+        <v-dialog
+          v-model="deleteDialogVisible"
+          content-class="align-self-start mt-12"
+          width="600px"
+          max-width="90%">
+        <v-card class="p-relative">
+          <v-card-title class="text-body-1 font-weight-medium">
+            {{$t('delete_order')}}
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <div class="text-body-1 pt-8">
+              {{$t('delete_order_ask')}}</div>
+          </v-card-text>
+          <v-card-actions>
+            <v-row class="dialog-footer text-right py-2">
+              <v-col>
+                <v-btn
+                    color="primary"
+                    depressed
+                    text
+                    @click="deleteDialogVisible = false"
+                >{{$t('cancel')}}</v-btn>
+                <v-btn
+                    depressed
+                    outlined
+                    @click="onDeleteClick"
+                    class="red--text mx-4"
+                >{{ $t('yes') }}</v-btn>
+              </v-col>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       </v-row>
 </template>
 
@@ -185,6 +219,7 @@ export default {
 		ready: false,
 		focus: "",
 		editDialog: false,
+		deleteDialogVisible: false,
 		isCreate: false,
 		calendarKey: 0,
 		type: "day",
@@ -218,18 +253,17 @@ export default {
 		getCurrentTime () {
 			return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0;
 		},
-		deleteEvent(){
+		onDeleteClick(){
 			this.events = this.events.filter((event)=> event.index !== this.selectedEvent.index);
 			window.localStorage.setItem("events", JSON.stringify(this.events));
 			this.updateRange();
+			this.deleteDialogVisible = false;
 			// this.selectedEvent = null;
 		},
 		selectEvent(event){
 			event.color = this.styilistColor[event.name];
-			console.log(event.index);
 			this.events.forEach((item, index)=> {
 				if(event.index === item.index) {
-					console.log(item);
 					this.events[index] = event;
 				}
 			});
