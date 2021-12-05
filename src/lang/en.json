@@ -1,5 +1,5 @@
 {
-    "test": "iakobi",
+    "home": "Home",
     "start_time": "Start Time",
     "end_time": "End Time",
     "currency": "GEL",
@@ -10,5 +10,22 @@
     "client": "Client",
     "pin": "Pin",
     "price": "Price",
-    "order_type": "Order Type"
+    "order_type": "Order Type",
+    "set_to_ka": "language: EN",
+    "set_to_dark": "Dark Mode",
+    "set_to_light": "Light Mode",
+    "new_order": "New Order",
+    "today": "TODAY",
+    "day": "DAY",
+    "week": "WEEK",
+    "month": "MONTH",
+    "cancel": "CANCEL",
+    "add_order": "Add Order",
+    "employee": "Employee",
+    "exact_date": "Date",
+    "save": "SAVE",
+    "pay_type": "Pay Type",
+    "cash": "Cash",
+    "card": "Card"
+
 }

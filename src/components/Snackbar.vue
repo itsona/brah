@@ -11,7 +11,7 @@
   >
     {{ message }}
     <v-btn text class="text-left" color="#00d369" @click.native="show = false"
-      >Close</v-btn
+      >{{$t('close')}}</v-btn
     >
   </v-snackbar>
 </template>

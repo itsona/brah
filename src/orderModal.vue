@@ -4,7 +4,7 @@
       {{$t(isCreate? 'add_order' :'edit_order')}}
       <v-btn icon @click="$emit('close')"><v-icon>close</v-icon></v-btn>
     </v-card-title>
-    <v-divider></v-divider>
+    <v-divider></v-divider>  
     <v-card-text class="text--primary">
       <h6 class="text-subtitle-1 font-weight-medium mt-4"></h6>
       <validation-observer>
@@ -53,8 +53,6 @@
         </v-text-field>
           </validation-provider>
       </validation-observer>
-      {{prices}}
-      {{innerOrder.details.order_type}}
       <v-text-field
         outlined
         type="number"
@@ -62,6 +60,12 @@
         :label="$t('price')"
         @input="(event)=> innerOrder.details.price = event"
       ></v-text-field>
+      <v-select
+          :items="[$t('card'), $t('cash')]"
+          :label="$t('pay_type')"
+          outlined
+          v-model="innerOrder.details.pay_type"
+      ></v-select>
       <v-menu
           ref="menu"
           v-model="selectedDate"
@@ -154,14 +158,14 @@
                   depressed
                   text
                   @click="$emit('close')"
-              >Cancel</v-btn>
+              >{{$t('cancel')}}</v-btn>
               <v-btn
                   color="primary"
                   depressed
                   outlined
                   class="mx-4"
                   @click="saveOrder"
-              >Save</v-btn>
+              >{{$t('save')}}</v-btn>
             </v-col>
           </v-row>
         </v-col>

@@ -24,7 +24,7 @@
                       <v-icon class="mr-6 ml-2">
                         chevron_left
                       </v-icon>
-                      Close sidebar
+                      {{$t('close sidebar')}}
                     </v-list-item-icon>
                   </a>
                 </v-list-item>

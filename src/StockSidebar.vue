@@ -7,7 +7,7 @@
                              active-class="none"
                              v-for="(item, idx) in items"
                              :key="idx"
-                             style="text-decoration: none; color: inherit;">
+                             style="text-decoration: none; color: inherit;">  
                     <div
                         class="sidebar-item item-active"
                     >
@@ -35,7 +35,7 @@ export default {
 		return {
 			drawer: false,
 			items: [
-				{ name: "test", icon: "home", route: "stock-home" },
+				{ name: "home", icon: "home", route: "stock-home" },
 				{ name: "Overview", icon: "analytics", route: "stock-overview" },
 				{ name: "Operate", icon: "build", route: "stock-operate" },
 				{ name: "Assortment", icon: "category", route: "stock-assortment" },

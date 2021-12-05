@@ -11,7 +11,7 @@
                   color="darken-1"
                   @click="setToday"
               >
-                Today
+                {{$t('today')}}
               </v-btn>
               <v-btn
                   fab
@@ -61,7 +61,7 @@
                       v-bind="attrs"
                       v-on="on"
                   >
-                    <span>{{ typeToLabel[type] }}</span>
+                    <span>{{ $t(typeToLabel[type].toLowerCase()) }}</span>
                     <v-icon right>
                       mdi-menu-down
                     </v-icon>
@@ -69,13 +69,13 @@
                 </template>
                 <v-list>
                   <v-list-item @click="type = 'day'">
-                    <v-list-item-title>Day</v-list-item-title>
+                    <v-list-item-title>{{$t('day')}}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="type = 'week'">
-                    <v-list-item-title>Week</v-list-item-title>
+                    <v-list-item-title>{{$t('week')}}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="type = 'month'">
-                    <v-list-item-title>Month</v-list-item-title>
+                    <v-list-item-title>{{$t('month')}}</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -139,7 +139,7 @@
                       :key="key">
                     <v-row class="justify-space-between detail" v-if="key !== 'price'">
                       {{$t(key)}}: <span class="detail-item">
-                      {{key === 'order_type' ? $t(item) : item}}
+                      {{key === 'order_type' || key === 'pay_type' ? $t(item) : item}}
                     </span></v-row><br></span>
                 </v-card-text>
                 <v-card-actions>
@@ -149,7 +149,7 @@
                   >
                     {{ $t('cancel') }}
                   </v-btn>
-                </v-card-actions>
+                </v-card-actions>  
               </v-card>
             </v-menu>
           </v-sheet>
@@ -855,6 +855,7 @@ export default {
 				];
 				events.forEach((item, index)=> {
 					item.index = index;
+					item.details.pay_type = index % 3 ? "cash" : "card";
 				});
 				window.localStorage.setItem("events", JSON.stringify(events));
 				this.events = events;
