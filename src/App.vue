@@ -16,7 +16,6 @@
           <v-tab-item>
             <v-col col="12" style="min-height: 80vh; padding-top: 24px">
               <v-row class="justify-space-between">
-
                 <v-card
                     class="mx-6 pa-4 px-8"
                 >
