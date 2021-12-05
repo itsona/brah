@@ -61,7 +61,7 @@
         @input="(event)=> innerOrder.details.price = event"
       ></v-text-field>
       <v-select
-          :items="[$t('card'), $t('cash')]"
+          :items="[{text: $t('card'), value: 'card'}, {text: $t('cash'), value: 'cash'}]"
           :label="$t('pay_type')"
           outlined
           v-model="innerOrder.details.pay_type"

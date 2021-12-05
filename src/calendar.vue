@@ -918,6 +918,7 @@ export default {
 				event[key] = "";
 			}
 			event.details = {};
+			event.details.pay_type = "card";
 			this.selectedEvent = event;
 		}
 	},
