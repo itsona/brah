@@ -7,7 +7,7 @@
                              active-class="none"
                              v-for="(item, idx) in items"
                              :key="idx"
-                             style="text-decoration: none; color: inherit;">
+                             style="text-decoration: none; color: inherit;">  
                     <div
                         class="sidebar-item item-active"
                     >
