@@ -10,7 +10,7 @@
                 >
                     <router-link :to="{ name: item.route }">
                         <v-list-item-icon class="sidebar-icon">
-                            <v-icon class="mr-6 ml-2">
+                            <v-icon class="mr-6 ml-2"> 
                                 {{ item.icon }}
                             </v-icon>
                           {{$t(item.name)}}
