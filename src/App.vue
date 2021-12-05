@@ -1,9 +1,9 @@
 <template>
-  <v-app>
+  <v-app color="primary">
     <v-row class="ma-0">
       <vue-progress-bar/>
       <stock-sidebar></stock-sidebar>
-      <calendar></calendar>
+      <calendar ></calendar>
     </v-row>
   </v-app>
 </template>
@@ -15,6 +15,10 @@ import StockSidebar from "./StockSidebar";
 export default {
 	name: "App",
 	components: {StockSidebar, Calendar},
+	created() {
+		this.$i18n.locale = window.localStorage.getItem("locale") || "ka";
+		this.$vuetify.theme.dark = !!window.localStorage.getItem("dark");
+	}
 };
 </script>
 
@@ -38,6 +42,27 @@ export default {
 
 body {
   font-family: "FiraGo_Regular", sans-serif;
+}
+
+html {
+  overflow-y: unset;
+   --scrollbarBG: #CFD8DC;
+   --thumbBG: #90A4AE;
+ }
+.v-calendar-daily__scroll-area::-webkit-scrollbar {
+  width: 11px;
+}
+.v-calendar-daily__scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+.v-calendar-daily__scroll-area::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+.v-calendar-daily__scroll-area::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
 }
 
 .v-application {
