@@ -9,32 +9,43 @@
                     :key="idx"
                 >
                     <router-link :to="{ name: item.route }">
-                        <v-list-item-icon class="sidebar-icon">
-                            <v-icon class="mr-6 ml-2"> 
+                        <v-list-item-icon class="sidebar-icon text--secondary">
+                            <v-icon class="mr-6 ml-2">
                                 {{ item.icon }}
                             </v-icon>
                           {{$t(item.name)}}
                         </v-list-item-icon>
                     </router-link>
                 </v-list-item>
-                <v-list-item
+                <v-list-item @click="clickDrawer"
                     class="drawer-open-btn">
-                    <v-list-item-icon class="sidebar-icon" @click="clickDrawer">
+                  <a class="router-link-active">
+                    <v-list-item-icon class="sidebar-icon  text--secondary">
                       <v-icon class="mr-6 ml-2">
                         chevron_left
                       </v-icon>
                       Close sidebar
                     </v-list-item-icon>
+                  </a>
                 </v-list-item>
-                <v-list-item
-                    @click="$vuetify.theme.dark = !$vuetify.theme.dark"
-                    class="daylight">
-                    <v-list-item-icon class="sidebar-icon" >
-                      <v-icon class="mr-6 ml-2">
+                <v-row
+                    active-class="none"
+                    class="languages ml-5">
+                  <a class="router-link-active">
+                    <v-btn class="sidebar-icon flex align-center justify-center " icon width="40px" height="40px">
+                      <img class="pa-2" :src="require('./assets/img/ka.svg')" @click="$i18n.locale = 'ka'; callSnack('set_to_ka')">
+                    </v-btn>
+                    <v-btn class="sidebar-icon mx-3" icon width="40px" height="40px" >
+                      <img class="pa-2" :src="require('./assets/img/en.svg')" @click="$i18n.locale = 'en'; callSnack('set_to_ka')">
+                    </v-btn>
+                    <v-btn class="sidebar-icon flex align-center justify-center mr-3" icon width="40px" height="40px"
+                           @click="changeTheme">
+                      <v-icon class="pa-2">
                         wb_sunny
                       </v-icon>
-                    </v-list-item-icon>
-                </v-list-item>
+                    </v-btn>
+                  </a>
+                </v-row>
             </v-list-item-group>
 
         </v-list>
@@ -55,6 +66,21 @@ export default {
 		clickDrawer () {
 			this.drawer = !this.drawer;
 		},
+		changeTheme(){
+			this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+			if(this.$vuetify.theme.dark) {
+				window.localStorage.setItem("dark", "true");
+				this.callSnack("set_to_dark");
+			}
+			else {
+				window.localStorage.removeItem("dark");
+
+				this.callSnack("set_to_light");
+			}
+		},
+		callSnack(snack){
+			this.$store.dispatch("setSnack", this.$t(snack));
+		},
 		itemActive (item) {
 			if (item.name === "Settings") {
 				if (this.$route.path.split("/")[1] === "settings") {
@@ -71,7 +97,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+
+.drawer-open-btn {
+  width: 100%;
+}
+</style>
+<style lang="scss" >
 .expanded-item {
     width: 100%;
     display: flex;
@@ -81,13 +113,12 @@ export default {
 .drawer-open-btn {
   position: absolute;
   bottom: 0;
-  width: 100%;
 }
 
-.daylight {
+.languages {
   position: absolute;
   width: 100%;
-  bottom: 70px
+  bottom: 50px
 }
 
 .drawer-items {
@@ -97,11 +128,6 @@ export default {
 .list {
   height: 100vh;
 }
-
-.sidebar-icon {
-  color: #00d369;
-}
-
 .sidebar-drawer {
     box-shadow: none !important;
     box-shadow: inset 0px 2px 2px #ccc !important;

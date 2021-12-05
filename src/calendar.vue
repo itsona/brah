@@ -8,8 +8,8 @@
               <v-btn
                   outlined
                   class="mr-4"
-                  color="grey darken-2"
-                  @click="type = 'day'"
+                  color="darken-1"
+                  @click="setToday"
               >
                 Today
               </v-btn>
@@ -17,7 +17,7 @@
                   fab
                   text
                   small
-                  color="grey darken-2"
+                  color="darken-1"
                   @click="prev"
               >
                 <v-icon small>
@@ -28,7 +28,7 @@
                   fab
                   text
                   small
-                  color="grey darken-2"
+                  color="darken-1"
                   @click="next"
               >
                 <v-icon small>
@@ -38,6 +38,17 @@
               <v-toolbar-title v-if="$refs.calendar">
                 {{ $refs.calendar.title }}
               </v-toolbar-title>
+              <v-btn
+                  text
+                  color="darken-1"
+                  class="ml-8 text-capitalize"
+                  @click="addOrder"
+              >
+                <v-icon small class="mr-2">
+                  add
+                </v-icon>
+                {{$t('new_order')}}
+              </v-btn>
               <v-spacer></v-spacer>
               <v-menu
                   bottom
@@ -46,7 +57,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                       outlined
-                      color="grey darken-2"
+                      color="darken-2"
                       v-bind="attrs"
                       v-on="on"
                   >
@@ -70,11 +81,12 @@
               </v-menu>
             </v-toolbar>
           </v-sheet>
-          <v-sheet height="600">
+          <v-sheet height="650">
             <v-calendar
                 ref="calendar"
+                :key="calendarKey"
                 v-model="focus"
-                color="primary"
+                color="secondary"
                 :events="events"
                 :event-color="getEventColor"
                 :type="type"
@@ -98,7 +110,6 @@
                 offset-x
             >
               <v-card
-                  color="grey lighten-4"
                   min-width="350px"
                   flat
               >
@@ -106,12 +117,12 @@
                     :color="selectedEvent.color"
                     dark
                 >
-                  <v-btn icon @click="editDialog = true">
+                  <v-btn icon @click="editDialog = true; isCreate = false">
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                   <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                   <v-spacer></v-spacer>
-                  <v-btn icon>
+                  <v-btn icon @click="deleteEvent">
                     <v-icon>delete</v-icon>
                   </v-btn>
                   <v-btn icon>
@@ -119,18 +130,24 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-text>
-                  <span><v-row class="justify-space-between detail">{{$t('price')}}: <span class="detail-item">{{prices[((selectedEvent && selectedEvent.details &&selectedEvent.details.order_type) || 'hair_trim')]}}{{$t('currency')}}</span></v-row><br></span>
+                  <span><v-row class="justify-space-between detail">{{$t('price')}}: <span class="detail-item">
+                    {{(selectedEvent && selectedEvent.details && selectedEvent.details.price) ||
+                  (prices[((selectedEvent && selectedEvent.details &&selectedEvent.details.order_type) || 'hair_trim')])}}{{$t('currency')}}</span></v-row><br></span>
                   <span
                       class="d-grid"
-                      v-for="(item, key) in selectedEvent.details" :key="key"><v-row class="justify-space-between detail">{{$t(key)}}: <span class="detail-item">{{item}}</span></v-row><br></span>
+                      v-for="(item, key) in selectedEvent.details"
+                      :key="key">
+                    <v-row class="justify-space-between detail" v-if="key !== 'price'">
+                      {{$t(key)}}: <span class="detail-item">
+                      {{key === 'order_type' ? $t(item) : item}}
+                    </span></v-row><br></span>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn
                       text
-                      color="secondary"
                       @click="selectedOpen = false"
                   >
-                    Cancel
+                    {{ $t('cancel') }}
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -141,13 +158,17 @@
             v-model="editDialog"
             width="600px"
             scrollable
-            dark
         >
           <order-modal
-              :order="selectedEvent"
+              v-if="editDialog"
+              :prices="prices"
+              :order="{...selectedEvent}"
               :order_types="Object.keys(prices)"
               :names="names"
+              :isCreate="isCreate"
               @close="editDialog = false"
+              @saved="selectEvent"
+              @added="addEvent"
             ></order-modal>
         </v-dialog>
       </v-row>
@@ -164,6 +185,8 @@ export default {
 		ready: false,
 		focus: "",
 		editDialog: false,
+		isCreate: false,
+		calendarKey: 0,
 		type: "day",
 		typeToLabel: {
 			month: "Month",
@@ -174,7 +197,7 @@ export default {
 		selectedElement: null,
 		selectedOpen: false,
 		events: [],
-		colors: ["blue", "indigo", "deep-purple", "cyan", "green", "orange", "grey darken-1"],
+		colors: ["blue", "indigo", "deep-purple", "cyan", "green", "orange"],
 		names: ["თამუნა", "ხვიჩა", "მაია", "გოჩა",],
 		styilistColor: {
 			"თამუნა": "blue",
@@ -195,6 +218,35 @@ export default {
 		getCurrentTime () {
 			return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0;
 		},
+		deleteEvent(){
+			this.events = this.events.filter((event)=> event.index !== this.selectedEvent.index);
+			window.localStorage.setItem("events", JSON.stringify(this.events));
+			this.updateRange();
+			// this.selectedEvent = null;
+		},
+		selectEvent(event){
+			event.color = this.styilistColor[event.name];
+			console.log(event.index);
+			this.events.forEach((item, index)=> {
+				if(event.index === item.index) {
+					console.log(item);
+					this.events[index] = event;
+				}
+			});
+			window.localStorage.setItem("events", JSON.stringify(this.events));
+			this.updateRange();
+			this.editDialog = false;
+		},
+		addEvent(event){
+			event.timed= true;
+			event.color= this.styilistColor[event.name];
+			event.index = this.events.length;
+			this.events.push(event);
+			window.localStorage.setItem("events", JSON.stringify(this.events));
+			this.updateRange();
+			this.editDialog = false;
+			this.isCreate = false;
+		},
 		scrollToTime () {
 			const time = this.getCurrentTime();
 			const first = Math.max(0, time - (time % 30) - 30);
@@ -212,6 +264,7 @@ export default {
 		},
 		setToday () {
 			this.focus = "";
+			this.type = "day";
 		},
 		prev () {
 			this.$refs.calendar.prev();
@@ -236,596 +289,601 @@ export default {
 			nativeEvent.stopPropagation();
 		},
 		updateRange () {
-			const events = [
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-					  order_type: "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 02 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 02 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						order_type: "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 02 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 02 2021 14:40:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 08 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 08 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						order_type: "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 08 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 08 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 11 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 11 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						order_type: "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 11 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 11 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 14 2021 12:20:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 14 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						order_type: "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 14 2021 12:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 14 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 06 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 06 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						order_type: "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 06 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 06 2021 14:40:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						order_type: "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 14 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 14 2021 11:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						order_type: "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 14 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 14 2021 11:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 04 2021 17:20:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 04 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						order_type: "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 04 2021 17:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 04 2021 17:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 09 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 09 2021 15:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						order_type: "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 09 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 09 2021 15:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 19 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 19 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						order_type: "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 19 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 19 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 21 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 21 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						order_type: "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 21 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 21 2021 14:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name: "მაია",
-					start: new Date("Sat Dec 22 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 22 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 22 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 22 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 24 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 24 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 24 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 24 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 28 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 28 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 28 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 28 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 28 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 28 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 28 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 28 2021 14:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 24 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 24 2021 11:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 24 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 24 2021 11:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 27 2021 10:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 27 2021 10:25:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 27 2021 10:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 27 2021 10:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 30 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 30 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 30 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 30 2021 14:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 29 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 29 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 29 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 29 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 05 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 05 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 05 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 05 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 10 2021 17:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 10 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 10 2021 17:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 10 2021 17:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 30 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 30 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 30 2021 16:00:00GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 30 2021 17:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 12 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 12 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 12 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 12 2021 12:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 17 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 17 2021 13:15:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 17 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 17 2021 13:15:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 15 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 15 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 15 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 15 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 16 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 16 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 16 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 16 2021 17:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 16 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 16 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 16 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 16 2021 14:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 13 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 13 2021 12:25:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 13 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 13 2021 12:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 13 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 13 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 13 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 13 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 13 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 13 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 13 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 13 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 21 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 21 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 21 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 21 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"მაია",
-					start: new Date("Sat Dec 20 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 20 2021 15:25:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["მაია"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 20 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 20 2021 15:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 14 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 14 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 14 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 14 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 25 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 25 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 25 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 25 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა: წვერის გასწორება",
-					start: new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 07 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 07 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 07 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 07 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"გოჩა",
-					start: new Date("Sat Dec 06 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 06 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["გოჩა"],
-					timed: true,
-					details: {
-						"order_type": "hair_paint",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 06 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 06 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"თამუნა",
-					start: new Date("Sat Dec 07 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 07 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["თამუნა"],
-					timed: true,
-					details: {
-						"order_type": "hair_brush",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 07 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 07 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-				{
-					name:"ხვიჩა",
-					start: new Date("Sat Dec 03 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
-					end: new Date("Sat Dec 03 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
-					color: this.styilistColor["ხვიჩა"],
-					timed: true,
-					details: {
-						"order_type": "beard_trim",
-						"client": "testClient1",
-						"start_time": new Date("Sat Dec 03 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"end_time": new Date("Sat Dec 03 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
-						"pin": "012345678912"
-					}
-				},
-			];
-
-			// const min = new Date(`${start.date}T00:00:00`);
-			// const max = new Date(`${end.date}T23:59:59`);
-			// if(this.updated) return;
-			// this.updated = true;
-			// const days = (max.getTime() - min.getTime()) / 86400000;
-			// const eventCount = this.rnd(days, days + 20);
-			//
-			// for (let i = 0; i < eventCount; i++) {
-			// 	const allDay = this.rnd(0, 3) === 0;
-			// 	const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-			// 	const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-			// 	const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-			// 	const second = new Date(first.getTime() + secondTimestamp);
-
-			// events.push({
-			// 	name: this.names[this.rnd(0, this.names.length - 1)],
-			// 	start: first,
-			// 	end: second,
-			// 	color: this.colors[this.rnd(0, this.colors.length - 1)],
-			// 	timed: !allDay,
-			// });
-			//	}
-
-			this.events = events;
+			// window.localStorage.removeItem("events");
+			if(!window.localStorage.getItem("events")) {
+				const events = [
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 05 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 05 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 05 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 05 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							order_type: "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 04 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 04 2021 12:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 02 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 02 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							order_type: "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 02 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 02 2021 14:40:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 08 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 08 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							order_type: "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 08 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 08 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 11 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 11 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							order_type: "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 11 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 11 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 14 2021 12:20:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 14 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							order_type: "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 14 2021 12:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 14 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 06 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 06 2021 14:40:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							order_type: "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 06 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 06 2021 14:40:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							order_type: "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 18 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 18 2021 15:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 14 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 14 2021 11:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							order_type: "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 14 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 14 2021 11:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 04 2021 17:20:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 04 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							order_type: "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 04 2021 17:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 04 2021 17:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 09 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 09 2021 15:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							order_type: "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 09 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 09 2021 15:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 19 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 19 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							order_type: "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 19 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 19 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 21 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 21 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							order_type: "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 21 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 21 2021 14:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name: "მაია",
+						start: new Date("Sat Dec 22 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 22 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 22 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 22 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 24 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 24 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 24 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 24 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 28 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 28 2021 13:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 28 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 28 2021 13:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 28 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 28 2021 14:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 28 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 28 2021 14:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 24 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 24 2021 11:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 24 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 24 2021 11:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 27 2021 10:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 27 2021 10:25:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 27 2021 10:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 27 2021 10:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 30 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 30 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 30 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 30 2021 14:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 29 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 29 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 29 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 29 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 10 2021 17:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 10 2021 17:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 10 2021 17:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 10 2021 17:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 30 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 30 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 30 2021 16:00:00GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 30 2021 17:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 12 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 12 2021 12:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 12 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 12 2021 12:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 17 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 17 2021 13:15:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 17 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 17 2021 13:15:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 15 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 15 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 15 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 15 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 16 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 16 2021 17:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 16 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 16 2021 17:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 16 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 16 2021 14:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 16 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 16 2021 14:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 13 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 13 2021 12:25:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 13 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 13 2021 12:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 13 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 13 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 13 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 13 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 13 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 13 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 13 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 13 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 21 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 21 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 21 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 21 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"მაია",
+						start: new Date("Sat Dec 20 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 20 2021 15:25:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["მაია"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 20 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 20 2021 15:25:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 14 2021 13:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 14 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 14 2021 13:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 14 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 25 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 25 2021 13:30:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 25 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 25 2021 13:30:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა: წვერის გასწორება",
+						start: new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 07 2021 14:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 07 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 07 2021 14:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 07 2021 15:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"გოჩა",
+						start: new Date("Sat Dec 06 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 06 2021 12:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["გოჩა"],
+						timed: true,
+						details: {
+							"order_type": "hair_paint",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 06 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 06 2021 12:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"თამუნა",
+						start: new Date("Sat Dec 07 2021 16:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 07 2021 16:45:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["თამუნა"],
+						timed: true,
+						details: {
+							"order_type": "hair_brush",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 07 2021 16:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 07 2021 16:45:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+					{
+						name:"ხვიჩა",
+						start: new Date("Sat Dec 03 2021 11:00:00 GMT+0400 (Georgia Standard Time)"),
+						end: new Date("Sat Dec 03 2021 12:00:00 GMT+0400 (Georgia Standard Time)"),
+						color: this.styilistColor["ხვიჩა"],
+						timed: true,
+						details: {
+							"order_type": "beard_trim",
+							"client": "testClient1",
+							"start_time": new Date("Sat Dec 03 2021 11:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"end_time": new Date("Sat Dec 03 2021 12:00:00 GMT+0400 (Georgia Standard Time)").toLocaleTimeString(),
+							"pin": "012345678912"
+						}
+					},
+				];
+				events.forEach((item, index)=> {
+					item.index = index;
+				});
+				window.localStorage.setItem("events", JSON.stringify(events));
+				this.events = events;
+			}else {
+				const events = window.localStorage.getItem("events");
+				const eventsFromStorage = JSON.parse(events);
+				const calendarEvents = eventsFromStorage.map((item)=> {
+					console.log(item);
+					return {
+						...item,
+						start: new Date(item.start),
+						end: new Date(item.end)
+					};
+				});
+				this.events = [...calendarEvents];
+			}
 		},
 		rnd (a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
+		},
+		addOrder(){
+			this.isCreate = true;
+			this.editDialog = true;
+			const event =  {};
+			for(const key in this.events[0]){
+				event[key] = "";
+			}
+			event.details = {};
+			this.selectedEvent = event;
 		}
 	},
 	computed: {

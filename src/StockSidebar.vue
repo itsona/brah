@@ -4,12 +4,12 @@
         <div class="sidebar-wrapper">
             <div class="sidebar-items">
                 <router-link :to="{ name: item.route }"
+                             active-class="none"
                              v-for="(item, idx) in items"
                              :key="idx"
                              style="text-decoration: none; color: inherit;">
                     <div
-                        class="sidebar-item"
-                        :class="{ 'item-active': itemActive(item) }"
+                        class="sidebar-item item-active"
                     >
                         <v-icon class="sidebar-icon"> {{ item.icon }} </v-icon>
                     </div>
@@ -45,14 +45,6 @@ export default {
 		};
 	},
 	methods: {
-		itemActive (item) {
-			if (item.name === "Settings") {
-				if (this.$route.path.split("/")[1] === "settings") {
-					return true;
-				}
-			}
-			return this.$route.name === item.route;
-		},
 		clickDrawer () {
 			this.$refs.drawer.clickDrawer();
 		}
@@ -84,7 +76,7 @@ export default {
 .drawer-open-btn {
   display: flex;
   position: absolute;
-  bottom: 0;
+  bottom: 8px;
 }
 
 </style>
