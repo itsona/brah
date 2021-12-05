@@ -33,15 +33,14 @@
                     class="languages ml-5">
                   <a class="router-link-active">
                     <v-btn class="sidebar-icon flex align-center justify-center " icon width="40px" height="40px">
-                      <img class="pa-2" :src="require('./assets/img/ka.svg')" @click="$i18n.locale = 'ka'">
+                      <img class="pa-2" :src="require('./assets/img/ka.svg')" @click="$i18n.locale = 'ka'; callSnack('set_to_ka')">
                     </v-btn>
                     <v-btn class="sidebar-icon mx-3" icon width="40px" height="40px" >
-                      <img class="pa-2" :src="require('./assets/img/en.svg')" @click="$i18n.locale = 'en'">
+                      <img class="pa-2" :src="require('./assets/img/en.svg')" @click="$i18n.locale = 'en'; callSnack('set_to_ka')">
                     </v-btn>
                     <v-btn class="sidebar-icon flex align-center justify-center mr-3" icon width="40px" height="40px"
                            @click="changeTheme">
-                      <v-icon class="pa-2"
-                      >
+                      <v-icon class="pa-2">
                         wb_sunny
                       </v-icon>
                     </v-btn>
@@ -69,8 +68,18 @@ export default {
 		},
 		changeTheme(){
 			this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-			if(this.$vuetify.theme.dark) window.localStorage.setItem("dark", "true");
-			else window.localStorage.removeItem("dark");
+			if(this.$vuetify.theme.dark) {
+				window.localStorage.setItem("dark", "true");
+				this.callSnack("set_to_dark");
+			}
+			else {
+				window.localStorage.removeItem("dark");
+
+				this.callSnack("set_to_light");
+			}
+		},
+		callSnack(snack){
+			this.$store.dispatch("setSnack", this.$t(snack));
 		},
 		itemActive (item) {
 			if (item.name === "Settings") {

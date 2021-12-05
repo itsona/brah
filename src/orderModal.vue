@@ -15,7 +15,12 @@
             v-model="innerOrder.name"
           ></v-autocomplete>
           <v-autocomplete
-              :items="order_types.map((item)=> $t(item))"
+              :items="order_types.map((item)=> {
+                return {
+                  text: $t(item),
+                  value: item,
+                }
+                })"
               outlined
               :label="$t('order_type')"
               v-model="innerOrder.details.order_type"
@@ -48,6 +53,15 @@
         </v-text-field>
           </validation-provider>
       </validation-observer>
+      {{prices}}
+      {{innerOrder.details.order_type}}
+      <v-text-field
+        outlined
+        type="number"
+        :value="prices[innerOrder.details.order_type]"
+        :label="$t('price')"
+        @input="(event)=> innerOrder.details.price = event"
+      ></v-text-field>
       <v-menu
           ref="menu"
           v-model="selectedDate"
@@ -163,7 +177,7 @@ import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
 	name: "orderModal",
-	props: ["order", "names","order_types","isCreate"],
+	props: ["order", "names","order_types","isCreate", "prices"],
 	components: {ValidationObserver, ValidationProvider },
 	data () {
 		return {

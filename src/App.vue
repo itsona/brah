@@ -5,6 +5,7 @@
       <stock-sidebar></stock-sidebar>
       <calendar ></calendar>
     </v-row>
+    <snackbar></snackbar>
   </v-app>
 </template>
 
@@ -12,9 +13,10 @@
 
 import Calendar from "./calendar";
 import StockSidebar from "./StockSidebar";
+import Snackbar from "./components/Snackbar";
 export default {
 	name: "App",
-	components: {StockSidebar, Calendar},
+	components: {StockSidebar, Calendar, Snackbar},
 	created() {
 		this.$i18n.locale = window.localStorage.getItem("locale") || "ka";
 		this.$vuetify.theme.dark = !!window.localStorage.getItem("dark");

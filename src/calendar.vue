@@ -9,7 +9,7 @@
                   outlined
                   class="mr-4"
                   color="darken-1"
-                  @click="type = 'day'"
+                  @click="setToday"
               >
                 Today
               </v-btn>
@@ -130,12 +130,14 @@
                   </v-btn>
                 </v-toolbar>
                 <v-card-text>
-                  <span><v-row class="justify-space-between detail">{{$t('price')}}: <span class="detail-item">{{prices[((selectedEvent && selectedEvent.details &&selectedEvent.details.order_type) || 'hair_trim')]}}{{$t('currency')}}</span></v-row><br></span>
+                  <span><v-row class="justify-space-between detail">{{$t('price')}}: <span class="detail-item">
+                    {{(selectedEvent && selectedEvent.details && selectedEvent.details.price) ||
+                  (prices[((selectedEvent && selectedEvent.details &&selectedEvent.details.order_type) || 'hair_trim')])}}{{$t('currency')}}</span></v-row><br></span>
                   <span
                       class="d-grid"
                       v-for="(item, key) in selectedEvent.details"
                       :key="key">
-                    <v-row class="justify-space-between detail">
+                    <v-row class="justify-space-between detail" v-if="key !== 'price'">
                       {{$t(key)}}: <span class="detail-item">
                       {{key === 'order_type' ? $t(item) : item}}
                     </span></v-row><br></span>
@@ -159,6 +161,7 @@
         >
           <order-modal
               v-if="editDialog"
+              :prices="prices"
               :order="{...selectedEvent}"
               :order_types="Object.keys(prices)"
               :names="names"
@@ -261,6 +264,7 @@ export default {
 		},
 		setToday () {
 			this.focus = "";
+			this.type = "day";
 		},
 		prev () {
 			this.$refs.calendar.prev();
