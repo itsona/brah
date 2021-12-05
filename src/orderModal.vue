@@ -4,10 +4,10 @@
       {{$t(isCreate? 'add_order' :'edit_order')}}
       <v-btn icon @click="$emit('close')"><v-icon>close</v-icon></v-btn>
     </v-card-title>
-    <v-divider></v-divider>  
+    <v-divider></v-divider>
     <v-card-text class="text--primary">
       <h6 class="text-subtitle-1 font-weight-medium mt-4"></h6>
-      <validation-observer>
+      <validation-observer ref="observer">
           <v-autocomplete
               :items="names"
               outlined
@@ -29,7 +29,7 @@
         <validation-provider
             v-slot="{ errors }"
             :name="$t('words.client')"
-            rules="required|max:11">
+            rules="required">
           <v-text-field
               outlined
               :label="$t('client')"
@@ -178,6 +178,7 @@
 
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
+import {scrollToValidation} from "./js/common/helpers";
 
 export default {
 	name: "orderModal",
@@ -196,11 +197,14 @@ export default {
 	},
 	methods: {
 		allowedStep: m => m % 5 === 0,
-		saveOrder(){
+		async saveOrder(){
 			this.innerOrder.start = new Date(this.date + ":" + this.start);
 			this.innerOrder.end = new Date(this.date + ":" + this.end);
 			this.innerOrder.details.start_time = this.innerOrder.start.toLocaleTimeString();
 			this.innerOrder.details.end_time = this.innerOrder.end.toLocaleTimeString();
+			const r = await this.$refs.observer.validate();
+			scrollToValidation();
+			if(!r) return;
 			this.$emit(this.isCreate ? "added": "saved", this.innerOrder);
 		},
 	},

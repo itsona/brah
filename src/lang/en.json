@@ -26,6 +26,10 @@
     "save": "SAVE",
     "pay_type": "Pay Type",
     "cash": "Cash",
-    "card": "Card"
-
+    "card": "Card",
+    "validation": {
+        "required": "Field Is Required",
+        "min": "Not Enough Symbols",
+        "max": "Too Many Symbols"
+    }
 }
