@@ -8,7 +8,7 @@
     <v-tabs-items v-model="activeTab">
       <v-tab-item>
         <calendar/>
-      </v-tab-item>
+      </v-tab-item> 
       <v-tab-item>
         <Reports></Reports>
       </v-tab-item>
