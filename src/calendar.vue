@@ -904,7 +904,7 @@ export default {
 						...item,
 						start: new Date(item.start),
 						end: new Date(item.end),
-						category: item.name
+						category: item.n0ame
 					};
 				});
 				this.events = [...calendarEvents];
