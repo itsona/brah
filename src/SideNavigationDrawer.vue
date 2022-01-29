@@ -18,7 +18,7 @@
                     </router-link>
                 </v-list-item>
                 <v-list-item @click="clickDrawer"
-                    class="drawer-open-btn">
+                    class="drawer-open-btn absolute">
                   <a class="router-link-active">
                     <v-list-item-icon class="sidebar-icon  text--secondary">
                       <v-icon class="mr-6 ml-2">
@@ -118,7 +118,8 @@ export default {
     border-bottom: 1px solid var(--border-color);
 }
 .drawer-open-btn {
-  position: absolute;
+  position: absolute !important;
+
   bottom: 0;
 }
 

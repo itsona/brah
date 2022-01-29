@@ -3,6 +3,7 @@
     <v-row class="ma-0">
       <vue-progress-bar/>
       <stock-sidebar></stock-sidebar>
+      <div style="width: 80px"></div>
       <router-view></router-view>
     </v-row>
     <snackbar></snackbar>
@@ -14,7 +15,7 @@
 import StockSidebar from "./StockSidebar";
 import Snackbar from "./components/Snackbar";
 export default {
-	name: "App", 
+	name: "App",
 	components: {StockSidebar, Snackbar},
 	data() {
 		return {

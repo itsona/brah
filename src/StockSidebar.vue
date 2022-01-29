@@ -15,6 +15,7 @@
           </div>
 
         </router-link>
+        <v-spacer></v-spacer>
         <div class="drawer-open-btn" @click="clickDrawer">
           <v-icon class="sidebar-icon">
             chevron_right
@@ -66,21 +67,24 @@ export default {
   min-height: 100vh;
   max-height: 100vh;
   color: var(--text-sub-black);
-  border-right: 1px solid rgba(180,180, 180, 0.6);
 }
 .sidebar {
-  width: 50px;
+  width: 70px;
+}
+
+.sidebar-items {
+  height: 100vh;
+  position: fixed;
+  border-right: 1px solid rgba(180,180, 180, 0.6);
 }
 
 .sidebar-icon {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
 }
 
 .drawer-open-btn {
   display: flex;
-  position: absolute;
-  bottom: 0;
 }
 
 </style>

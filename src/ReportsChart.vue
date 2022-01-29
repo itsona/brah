@@ -1,6 +1,7 @@
 <template>
   <ChartElement
-      style="width: 90%"
+      style="width: 80%"
+      class="mt-8"
       title="prediction_graph_weeks_order"
       ref="prediction_graph_weeks_order"
       :params="{}"
