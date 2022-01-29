@@ -162,7 +162,7 @@
             scrollable
         >
           <order-modal
-              v-if="editDialog"
+              v-if="false"
               :prices="prices"
               :order="{...selectedEvent}"
               :order_types="Object.keys(prices)"
@@ -172,6 +172,13 @@
               @saved="selectEvent"
               @added="addEvent"
             ></order-modal>
+          <vaucher-modal
+              :prices="prices"
+              :order="{...selectedEvent}"
+              :order_types="Object.keys(prices)"
+              :names="names"
+              :isCreate="isCreate"
+          ></vaucher-modal>
         </v-dialog>
         <v-dialog
           v-model="deleteDialogVisible"
@@ -214,9 +221,10 @@
 
 <script>
 import OrderModal from "./orderModal";
+import VaucherModal from "./VaucherModal";
 export default {
 	name: "App",
-	components: {OrderModal},
+	components: {VaucherModal, OrderModal},
 	data: () => ({
 		categories: [],
 		ready: false,
@@ -239,7 +247,7 @@ export default {
 		names: ["თამუნა", "ხვიჩა", "მაია", "გოჩა",],
 		styilistColor: {
 			"თამუნა": "blue",
-			"ხვიჩა": "indigo",
+			"ხვიჩა": "indigo", 
 			"მაია": "cyan",
 			"გოჩა": "orange"
 		},

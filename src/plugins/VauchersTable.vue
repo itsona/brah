@@ -1,17 +1,28 @@
 <template>
   <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="vouchers"
       :items-per-page="5"
-      class="pt-12 mt-15"
+      class=""
   ></v-data-table>
 </template>
 
 <script>
 export default {
 	name: "VauchersTable",
-	computed: {
-		headers(){
+	data() {
+	  return {
+			headers: [],
+			vouchers: [],
+		};
+	},
+	created() {
+	    this.headers = this.getHeaders();
+	    this.vouchers = this.getVouchers();
+	    this.$store.state.vouchers = this.vouchers;
+	},
+	methods: {
+		getHeaders(){
 			return [
 				{
 					text: this.$t("voucher_id"),
@@ -33,7 +44,7 @@ export default {
 					sortable: true, value: "voucher_exp_date" }
 			];
 		},
-		desserts(){
+		getVouchers(){
 			return [
 				{
 					voucher_type: "თმის შეჭრის ვაუჩერი",

@@ -14,7 +14,7 @@
 import StockSidebar from "./StockSidebar";
 import Snackbar from "./components/Snackbar";
 export default {
-	name: "App",
+	name: "App", 
 	components: {StockSidebar, Snackbar},
 	data() {
 		return {

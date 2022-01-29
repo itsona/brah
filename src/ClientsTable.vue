@@ -1,18 +1,29 @@
 <template>
-
   <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="clients"
       :items-per-page="5"
-      class="pt-12 mt-15"
+      class=""
   ></v-data-table>
 </template>
 
 <script>
 export default {
 	name: "ClientsTable",
-	computed: {
-		headers(){
+	data() {
+	  return {
+	    headers: [],
+			clients: [],
+		};
+	},
+	created() {
+	  this.headers = this.getHeaders();
+	  this.clients = this.getClients();
+		this.$store.state.clients = this.clients;
+		console.log(this.$store.state);
+	},
+	methods: {
+		getHeaders(){
 			return [
 				{
 					text: this.$t("client"),
@@ -34,7 +45,7 @@ export default {
 					sortable: true, value: "last_visit_date" },
 			];
 		},
-		desserts(){
+		getClients(){
 			return [
 				{
 					employee: "გიორგი",
