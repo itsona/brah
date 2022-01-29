@@ -229,7 +229,7 @@ export default {
 		typeToLabel: {
 			month: "Month",
 			week: "Week",
-			category: "day",
+			category: "Day",
 		},
 		selectedEvent: {},
 		selectedElement: null,
@@ -250,12 +250,14 @@ export default {
 		this.scrollToTime();
 		this.updateTime();
 		this.ready = true;
-		this.$refs.calendar.checkChange();
+		this.cal = this.$refs.calendar;
+		this.cal.checkChange();
 	},
 	methods: {
 		getCurrentTime () {
 			return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0;
 		},
+
 		onDeleteClick(){
 			this.events = this.events.filter((event)=> event.index !== this.selectedEvent.index);
 			window.localStorage.setItem("events", JSON.stringify(this.events));
@@ -904,7 +906,7 @@ export default {
 						...item,
 						start: new Date(item.start),
 						end: new Date(item.end),
-						category: item.n0ame
+						category: item.name
 					};
 				});
 				this.events = [...calendarEvents];
