@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 import VueRouter from "vue-router";
 import Home from "./Home";
 import Clients from "./Clients";
+import ReportsChart from "./ReportsChart";
 
 const routes = [
 
@@ -17,6 +18,11 @@ const routes = [
 		path: "/clients",
 		name: "Clients",
 		component: Clients,
+	},
+	{
+		path: "/reports",
+		name: "Reports",
+		component: ReportsChart,
 	},
 ];
 
