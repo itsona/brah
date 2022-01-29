@@ -68,7 +68,7 @@
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item @click="type = 'day'">
+                  <v-list-item @click="type = 'category'">
                     <v-list-item-title>{{$t('day')}}</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="type = 'week'">
@@ -229,7 +229,7 @@ export default {
 		typeToLabel: {
 			month: "Month",
 			week: "Week",
-			day: "Day",
+			category: "day",
 		},
 		selectedEvent: {},
 		selectedElement: null,
@@ -301,7 +301,7 @@ export default {
 		},
 		setToday () {
 			this.focus = "";
-			this.type = "day";
+			this.type = "category";
 		},
 		prev () {
 			this.$refs.calendar.prev();
