@@ -36,6 +36,7 @@ export default {
 			items: [
 				{ name: "home", icon: "home", route: "Home" },
 				{ name: "clients", icon: "people", route: "Clients" },
+				{ name: "Reports", icon: "analytics", route: "Reports" },
 				{ name: "assortment", icon: "category", route: "stock-assortment" },
 				{ name: "transfers", icon: "swap_calls", route: "stock-transfers" },
 				{ name: "operate", icon: "build", route: "stock-operate" },

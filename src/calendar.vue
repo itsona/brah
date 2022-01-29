@@ -830,7 +830,7 @@ export default {
 						}
 					},
 					{
-						name:"გოჩა: წვერის გასწორება",
+						name:"გოჩა",
 						start: new Date("Sat Dec 25 2021 15:00:00 GMT+0400 (Georgia Standard Time)"),
 						end: new Date("Sat Dec 25 2021 16:20:00 GMT+0400 (Georgia Standard Time)"),
 						color: this.styilistColor["გოჩა"],
