@@ -4,6 +4,7 @@ Vue.use(VueRouter);
 
 import VueRouter from "vue-router";
 import Home from "./Home";
+import Clients from "./Clients";
 
 const routes = [
 
@@ -11,6 +12,11 @@ const routes = [
 		path: "/",
 		name: "Home",
 		component: Home
+	},
+	{
+		path: "/clients",
+		name: "Clients",
+		component: Clients,
 	},
 ];
 

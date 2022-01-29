@@ -4,7 +4,6 @@
       <v-tabs-slider />
       <v-tab class="px-8">{{ $t('work_space') }}</v-tab>
       <v-tab class="px-8">{{ $t('day_report') }}</v-tab>
-      <v-tab class="px-8">{{ $t('clients_page') }}</v-tab>
     </v-tabs>
     <v-tabs-items v-model="activeTab">
       <v-tab-item>
@@ -13,21 +12,17 @@
       <v-tab-item>
         <Reports></Reports>
       </v-tab-item>
-      <v-tab-item>
-        <Clients></Clients>
-      </v-tab-item>
     </v-tabs-items>
   </v-col>
 </template>
 
 <script>
-import Clients from "./Clients";
 import Reports from "./Reports";
 import Calendar from "./calendar";
 
 export default {
 	name: "Home",
-	components: {Clients, Reports, Calendar},
+	components: {Reports, Calendar},
 	data() {
 		return {
 			activeTab: 0,

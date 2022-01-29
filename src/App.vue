@@ -29,7 +29,15 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
+
+
+.item-active {
+  border-right: 2px solid #007AFF;
+  i {
+    color: #007AFF !important;
+  }
+}
 .lngbox {
   border: none;
 }
