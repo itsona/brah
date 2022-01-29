@@ -54,99 +54,40 @@
         </v-card-text>
       </v-card>
     </v-row>
-    <v-data-table
-        :headers="headers"
-        :items="desserts"
-        :items-per-page="5"
-        class="pt-12 mt-15"
-    ></v-data-table>
+    <v-tabs v-model="activeTab" class="mt-5">
+    <v-tabs-slider />
+    <v-tab class="px-8">{{ $t('clients_table') }}</v-tab>
+    <v-tab class="px-8">{{ $t('vauchers_table') }}</v-tab>
+  </v-tabs>
+    <v-tabs-items v-model="activeTab">
+      <v-tab-item>
+        <ClientsTable></ClientsTable>
+      </v-tab-item>
+        <VauchersTable></VauchersTable>
+      <v-tab-item>
+      </v-tab-item>
+      <v-tab-item>
+      </v-tab-item>
+    </v-tabs-items>
   </v-col>
 
 </template>
 
 <script>
+import ClientsTable from "./ClientsTable";
+import VauchersTable from "./plugins/VauchersTable";
 export default {
 	name: "Clients",
-	computed: {
-		headers(){
-			return [
-				{
-					text: this.$t("client"),
-					align: "start",
-					sortable: true,
-					value: "employee",
-				},
-				{
-					text: this.$t("vouchers_count"),
-					sortable: true, value: "orders_count" },
-				{
-					text: this.$t("total_payed_net"),
-					sortable: true, value: "orders_net" },
-				{
-					text: this.$t("vaucher_exparation_date"),
-					sortable: true, value: "orders_net_payed" },
-				{
-					text: this.$t("last_visit_date"),
-					sortable: true, value: "orders_net_bought" },
-			];
-		},
-		desserts(){
-			return [
-				{
-					employee: "გიორგი",
-					orders_count: 4,
-					orders_net: 200,
-					orders_net_payed: Date("05/28/2022").substring(0, 15),
-					orders_net_bought: 8,
-				},
-				{
-					employee: "ელენე",
-					orders_count: 3,
-					orders_net: 150,
-					orders_net_payed: 42,
-					orders_net_bought: 77,
-				},
-				{
-					employee: "ნინი",
-					orders_count: 6,
-					orders_net: 300,
-					orders_net_payed: 0,
-					orders_net_bought: 0,
-				},
-				{
-					employee: "ლაშა",
-					orders_count: 7,
-					orders_net: 350,
-					orders_net_payed: 0,
-					orders_net_bought: 220,
-				},
-				{
-					employee: "მაია",
-					orders_count: 8,
-					orders_net: 400,
-					orders_net_payed: 42,
-					orders_net_bought: 77,
-				},
-				{
-					employee: "მარიამი",
-					orders_count: 5,
-					orders_net: 250,
-					orders_net_payed: 0,
-					orders_net_bought: 0,
-				},
-				{
-					employee: "თამარი",
-					orders_count: 4,
-					orders_net: 200,
-					orders_net_payed: 0,
-					orders_net_bought: 220,
-				},
-			];
-		}
+	data() {
+	  return {
+			activeTab: 0,
+		};
 	},
+	components: {VauchersTable, ClientsTable}
 };
 </script>
 
 <style scoped>
+
 
 </style>
