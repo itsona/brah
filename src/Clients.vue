@@ -96,7 +96,7 @@ export default {
 					employee: "გიორგი",
 					orders_count: 4,
 					orders_net: 200,
-					orders_net_payed: 112,
+					orders_net_payed: Date("05/28/2022").substring(0, 15),
 					orders_net_bought: 8,
 				},
 				{
