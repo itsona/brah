@@ -90,6 +90,8 @@
                 :events="events"
                 :event-color="getEventColor"
                 :type="type"
+                category-show-all
+                :categories="categories"
                 @click:event="showEvent"
                 @click:more="viewDay"
                 @click:date="viewDay"
@@ -216,13 +218,14 @@ export default {
 	name: "App",
 	components: {OrderModal},
 	data: () => ({
+		categories: [],
 		ready: false,
 		focus: "",
 		editDialog: false,
 		deleteDialogVisible: false,
 		isCreate: false,
 		calendarKey: 0,
-		type: "day",
+		type: "category",
 		typeToLabel: {
 			month: "Month",
 			week: "Week",
@@ -291,7 +294,7 @@ export default {
 		},
 		viewDay ({ date }) {
 			this.focus = date;
-			this.type = "day";
+			this.type = "category";
 		},
 		getEventColor (event) {
 			return event.color;
@@ -897,15 +900,19 @@ export default {
 				const events = window.localStorage.getItem("events");
 				const eventsFromStorage = JSON.parse(events);
 				const calendarEvents = eventsFromStorage.map((item)=> {
-					console.log(item);
 					return {
 						...item,
 						start: new Date(item.start),
-						end: new Date(item.end)
+						end: new Date(item.end),
+						categories: item.name
 					};
 				});
 				this.events = [...calendarEvents];
 			}
+			const categories = this.events.map((item)=> item.name);
+			const setCategories = new Set(categories);
+			this.categories = [...setCategories];
+			console.log(this.categories);
 		},
 		rnd (a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
