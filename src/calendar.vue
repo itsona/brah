@@ -904,7 +904,7 @@ export default {
 						...item,
 						start: new Date(item.start),
 						end: new Date(item.end),
-						categories: item.name
+						category: item.name
 					};
 				});
 				this.events = [...calendarEvents];
@@ -912,7 +912,6 @@ export default {
 			const categories = this.events.map((item)=> item.name);
 			const setCategories = new Set(categories);
 			this.categories = [...setCategories];
-			console.log(this.categories);
 		},
 		rnd (a, b) {
 			return Math.floor((b - a + 1) * Math.random()) + a;
